@@ -19,7 +19,7 @@ const getAllOrdersOfAllUsers = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Some error occured!",
     });
   }
 };
@@ -45,7 +45,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Some error occured!",
     });
   }
 };
@@ -74,7 +74,7 @@ const updateOrderStatus = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Some error occured!",
     });
   }
 };

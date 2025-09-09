@@ -58,7 +58,7 @@ const addProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error occured",
     });
   }
 };
@@ -76,7 +76,7 @@ const fetchAllProducts = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error occured",
     });
   }
 };
@@ -124,7 +124,7 @@ const editProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error occured",
     });
   }
 };
@@ -149,7 +149,7 @@ const deleteProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error occured",
     });
   }
 };
