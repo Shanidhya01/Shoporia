@@ -7,7 +7,7 @@ const addAddress = async (req, res) => {
     if (!userId || !address || !city || !pincode || !phone || !notes) {
       return res.status(400).json({
         success: false,
-        message: error.message || "All fields are required!",
+        message: "Invalid data provided!",
       });
     }
 
@@ -30,7 +30,7 @@ const addAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message || "Some error occured!",
+      message: "Error",
     });
   }
 };
@@ -55,7 +55,7 @@ const fetchAllAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message,
+      message: "Error",
     });
   }
 };
@@ -96,7 +96,7 @@ const editAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message,
+      message: "Error",
     });
   }
 };
@@ -128,7 +128,7 @@ const deleteAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message,
+      message: "Error",
     });
   }
 };

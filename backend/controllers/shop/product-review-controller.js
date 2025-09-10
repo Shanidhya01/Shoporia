@@ -58,7 +58,7 @@ const addProductReview = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message,
+      message: "Error",
     });
   }
 };
@@ -76,7 +76,7 @@ const getProductReviews = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: e.message,
+      message: "Error",
     });
   }
 };
