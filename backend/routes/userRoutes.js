@@ -1,9 +1,16 @@
 import express from "express";
-import { loginUser, logoutUser, registerUser, requestPasswordReset } from "../controller/userController.js";
+import { getUserDetails, loginUser, logoutUser, registerUser, requestPasswordReset, resetPassword, updatePassword, updateProfile } from "../controller/userController.js";
+import { verifyUserAuth } from "../middleware/userAuth.js"
+
 const router = express.Router();
 
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(logoutUser);
 router.route("/password/forgot").post(requestPasswordReset);
+router.route("/reset/:token").post(resetPassword);
+router.route("/profile").get(verifyUserAuth, getUserDetails).post(verifyUserAuth, getUserDetails);
+router.route("/password/update").post(verifyUserAuth, updatePassword);
+router.route("/profile/update").post(verifyUserAuth, updateProfile);
+
 export default router;

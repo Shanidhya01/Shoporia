@@ -90,7 +90,6 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-
 // 4 - DELETE Product
 export const deleteProduct = async (req, res) => {
   try {
@@ -115,7 +114,6 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-
 //5 - Accessing Single Product Details
 export const getSingleProduct = async (req, res) => {
   try {
@@ -137,3 +135,20 @@ export const getSingleProduct = async (req, res) => {
     });
   }
 };
+
+// 6 Admin - Get All Products (Admin)
+export const getAdminProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.error("getAdminProducts error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch admin products",
+    });
+  }
+}

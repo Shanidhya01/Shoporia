@@ -1,6 +1,8 @@
+import { log } from "console";
 import User from "../models/userModel.js";
 import { sendToken } from "../utils/jwtToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // Register a User
 export const registerUser = async (req, res) => {
@@ -167,3 +169,126 @@ export const requestPasswordReset = async (req, res) => {
     });
   }
 };
+
+// Reset password
+export const resetPassword = async (req, res) => {
+  try {
+    // console.log("Reset token from params:", req.params.token);
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if(!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired password reset token",
+      });
+    }
+
+    const {password, confirmPassword} = req.body;
+    if(password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Password and confirm password do not match",
+      });
+    }
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    sendToken(user, 200, res);
+  } catch (error) {
+    console.error("Error in resetPassword:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+// Get User Details
+export const getUserDetails = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    // console.log("Fetched user:", user);
+    // console.log("User ID from req.user:", req.user.id);
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error in getUserDetails:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update password
+export const updatePassword = async (req, res) => {
+  try {
+    const {oldPassword, newPassword, confirmPassword} = req.body;
+    const user = await User.findById(req.user.id).select("+password");
+    const checkPasswordMatch = await user.comparePassword(oldPassword);
+    if(!checkPasswordMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Old password is incorrect",
+      });
+    }
+    if(newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password and confirm password do not match",
+      });
+    }
+    user.password = newPassword;
+    await user.save();
+    sendToken(user, 200, res);
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    console.error("Error in updatePassword:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Update user profile
+export const updateProfile = async (req, res) => {
+  try {
+    const {name, email} = req.body;
+    const updateUserDetails = {
+      name,
+      email,
+    }
+    const user = await User.findByIdAndUpdate(req.user.id, updateUserDetails, { 
+      new: true, 
+      runValidators: true, 
+      useFindAndModify: false 
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user
+    });
+  } catch (error) {
+    console.error("Error in updateProfile:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
