@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import { sendToken } from "../utils/jwtToken.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 // Register a User
 export const registerUser = async (req, res) => {
@@ -104,6 +105,65 @@ export const logoutUser = async (req, res) => {
     return res.status(500).json({ 
       success: false, 
       message: error.message 
+    });
+  }
+};
+
+// Forgot Password
+export const requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 1. Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 2. Generate reset token
+    const resetToken = user.generatePasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    // 3. Construct reset URL
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/reset/${resetToken}`;
+    const message = `Use the following link to reset your password:\n\n${resetPasswordUrl}\n\nThis link is valid for 10 minutes.\n\nIf you did not request this, please ignore this email.`;
+    console.log("Reset URL:", resetPasswordUrl);
+    try {
+      // Simulate sending email
+      sendEmail({
+        email: user.email,
+        subject: "Shoporia Password Recovery",
+        message,
+      })
+      res.status(200).json({
+        success: true,
+        message: `Email is sent to ${user.email} successfully`,
+      });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({
+        success: false,
+        message: "Error sending email. Please try again later.",
+      });      
+    }
+    // TODO: Send resetPasswordUrl to user's email here
+
+    return res.status(200).json({
+      success: true,
+      message: `Reset token sent to email: ${email}`,
+      resetUrl: resetPasswordUrl, // include for debugging, remove in prod
+    });
+
+  } catch (error) {
+    console.error("Error in requestPasswordReset:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
