@@ -136,7 +136,58 @@ export const getSingleProduct = async (req, res) => {
   }
 };
 
-// 6 Admin - Get All Products (Admin)
+// 6 - Create or Update Product Review
+export const createReviewForProduct = async (req, res) => {
+  try {
+    const { rating, comment, productId } = req.body;
+    const review = {
+      user: req.user._id,
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+    }
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    const reviewExists = product.reviews.find(review => review.user.toString() === req.user.id.toString());
+    if (reviewExists) {
+      // Update existing review
+      product.reviews.forEach(review => {
+        if (review.user.toString() === req.user.id.toString()) {
+          review.rating = rating;
+          review.comment = comment;
+        }
+      });
+    } else {
+      // Create new review
+      product.reviews.push(review);
+    }
+    product.numOfReviews = product.reviews.length;
+    let avg = 0;
+    product.reviews.forEach(review => {
+      avg += review.rating;
+    });
+    product.ratings = product.reviews.length === 0 ? 0 : avg / product.reviews.length;
+    await product.save({ validateBeforeSave: false });
+    res.status(200).json({
+      success: true,
+      message: "Review created/updated successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("createReviewForProduct error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create/update review",
+    });
+  }
+}
+
+// 7 Admin - Get All Products (Admin)
 export const getAdminProducts = async (req, res) => {
   try {
     const products = await Product.find();

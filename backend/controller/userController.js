@@ -292,3 +292,96 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+// Admin - Getting user information
+export const getUsersList = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error("Error in getUsersList:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+//Admin - Get single user details
+export const getSingleUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found with this ID : ${req.params.id}`,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error in getSingleUserDetails:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Admin - Update user role
+export const updateUserRole = async (req, res) => {
+  try {
+    const {role} = req.body;
+    const newUserData = {
+      role
+    }
+    const user = await User.findByIdAndUpdate(req.params.id, newUserData, { 
+      new: true, 
+      runValidators: true
+    });
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found with this ID : ${req.params.id}`,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User role updated successfully",
+      user
+    });
+  } catch (error) {
+    console.error("Error in updateUserRole:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//Admin - Delete user
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found with this ID : ${req.params.id}`,
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
