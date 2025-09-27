@@ -1,5 +1,5 @@
 import Product from "../models/productModel.js";
-import APIFunctionality from "../utils/apiFunctionality.js";
+import mongoose from "mongoose"; // <-- add this
 
 // 1 - Create Product
 export const createProduct = async (req, res) => {
@@ -187,7 +187,71 @@ export const createReviewForProduct = async (req, res) => {
   }
 }
 
-// 7 Admin - Get All Products (Admin)
+//7 Getting Reviews
+export const getProductReviews = async (req, res) => {
+  try {
+    const id = req.params.id || req.query.productId || req.query.id;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Invalid product id" });
+    }
+
+    const product = await Product.findById(id).select("reviews ratings numOfReviews");
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      reviews: product.reviews || [],
+      ratings: product.ratings || 0,
+      numOfReviews: product.numOfReviews || 0,
+    });
+  } catch (error) {
+    console.error("getProductReviews error:", error);
+    return res.status(500).json({ success: false, message: "Failed to fetch product reviews" });
+  }
+};
+
+//8 Deleting Reviews
+export const deleteReview = async (req, res) => {
+  try {
+    const product = await Product.findById(req.query.productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    const reviews = product.reviews.filter(review => review._id.toString() !== req.query.id.toString());
+    let avg = 0;
+    reviews.forEach(review => {
+      avg += review.rating;
+    });
+    const ratings = reviews.length === 0 ? 0 : avg / reviews.length;
+    const numOfReviews = reviews.length;
+    await Product.findByIdAndUpdate(req.query.productId, {
+      reviews, 
+      ratings, 
+      numOfReviews
+    }, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Review deleted successfully",
+    });
+  } catch (error) {
+    console.error("deleteReview error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete review",
+    });
+  }
+}
+
+//9  Admin - Get All Products (Admin)
 export const getAdminProducts = async (req, res) => {
   try {
     const products = await Product.find();
