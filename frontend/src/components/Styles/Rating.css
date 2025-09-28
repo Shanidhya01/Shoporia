@@ -1,27 +1,445 @@
+/* CSS Variables for Rating Component */
+:root {
+  --star-color-empty: #e2e8f0;
+  --star-color-filled: #fbbf24;
+  --star-color-hover: #f59e0b;
+  --star-size-default: 1.5rem;
+  --star-size-small: 1rem;
+  --star-size-large: 2rem;
+  --star-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --star-glow: 0 0 20px rgba(251, 191, 36, 0.6);
+  --rating-bg: rgba(255, 255, 255, 0.05);
+  --rating-border: rgba(251, 191, 36, 0.2);
+}
 
+/* Enhanced Star Container */
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--rating-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid var(--rating-border);
+  transition: var(--star-transition);
+  width: fit-content;
+}
+
+.rating-container:hover {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.3);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.15);
+}
+
+/* Enhanced Star Base */
+.star {
+  font-size: var(--star-size-default);
+  cursor: pointer;
+  transition: var(--star-transition);
+  color: var(--star-color-empty);
+  position: relative;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  user-select: none;
+}
+
+/* Glow effect for stars */
+.star::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.star:hover::before,
+.star.filled:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Enhanced Filled State */
+.star.filled {
+  color: var(--star-color-filled);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  animation: starFill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes starFill {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Half Star Support */
+.star.half {
+  position: relative;
+  color: var(--star-color-empty);
+}
+
+.star.half::after {
+  content: '\2605';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: var(--star-color-filled);
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+/* Empty State */
+.star.empty {
+  color: var(--star-color-empty);
+  opacity: 0.6;
+  transition: var(--star-transition);
+}
+
+.star.empty:hover {
+  opacity: 1;
+  color: var(--star-color-hover);
+}
+
+/* Enhanced Hover Effects */
+.star:hover {
+  transform: scale(1.2) rotate(5deg);
+  color: var(--star-color-hover);
+  text-shadow: var(--star-glow);
+  filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.4)) brightness(1.2);
+}
+
+/* Cascade hover effect */
+.rating-container:hover .star {
+  animation: starWave 0.6s ease-in-out;
+}
+
+.rating-container:hover .star:nth-child(1) { animation-delay: 0s; }
+.rating-container:hover .star:nth-child(2) { animation-delay: 0.1s; }
+.rating-container:hover .star:nth-child(3) { animation-delay: 0.2s; }
+.rating-container:hover .star:nth-child(4) { animation-delay: 0.3s; }
+.rating-container:hover .star:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes starWave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Active/Pressed State */
+.star:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* Rating Text */
+.productCardSpan,
+.rating-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #64748b);
+  margin-left: 0.75rem;
+  font-weight: 500;
+  transition: var(--star-transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Enhanced Rating Text with Background */
+.rating-value {
+  background: linear-gradient(135deg, var(--star-color-filled) 0%, var(--star-color-hover) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.rating-count {
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.rating-count::before {
+  content: '(';
+}
+
+.rating-count::after {
+  content: ')';
+}
+
+/* Size Variations */
+.rating-small .star {
+  font-size: var(--star-size-small);
+}
+
+.rating-small .productCardSpan,
+.rating-small .rating-text {
+  font-size: 0.75rem;
+}
+
+.rating-large .star {
+  font-size: var(--star-size-large);
+}
+
+.rating-large .productCardSpan,
+.rating-large .rating-text {
+  font-size: 1.1rem;
+}
+
+/* Interactive Rating (for user input) */
+.rating-interactive {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  border: 2px solid rgba(251, 191, 36, 0.2);
+  transition: var(--star-transition);
+}
+
+.rating-interactive:hover {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.2);
+}
+
+.rating-interactive .star {
+  margin: 0 0.125rem;
+  font-size: 1.75rem;
+}
+
+/* Read-only Rating (display only) */
+.rating-readonly .star {
+  cursor: default;
+  pointer-events: none;
+}
+
+.rating-readonly .star:hover {
+  transform: none;
+  color: inherit;
+  text-shadow: none;
+  filter: none;
+}
+
+/* Compact Rating for Cards */
+.rating-compact {
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  gap: 0.125rem;
+}
+
+.rating-compact .star {
+  font-size: 1rem;
+}
+
+.rating-compact .productCardSpan,
+.rating-compact .rating-text {
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+/* Loading State */
+.rating-loading .star {
+  color: #e2e8f0;
+  animation: starLoading 1.5s ease-in-out infinite;
+}
+
+.rating-loading .star:nth-child(1) { animation-delay: 0s; }
+.rating-loading .star:nth-child(2) { animation-delay: 0.2s; }
+.rating-loading .star:nth-child(3) { animation-delay: 0.4s; }
+.rating-loading .star:nth-child(4) { animation-delay: 0.6s; }
+.rating-loading .star:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes starLoading {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Rating with Progress Bar */
+.rating-with-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rating-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(251, 191, 36, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.rating-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--star-color-filled), var(--star-color-hover));
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .star {
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: color 0.3s ease, transform 0.3s ease;
-    color: var(--text-secondary);
+    font-size: 1.25rem;
   }
-  
-  .star.filled {
-    color: var(--primary-main); 
+
+  .rating-container {
+    padding: 0.375rem 0.625rem;
+    gap: 0.125rem;
   }
-  
-  .star.empty {
-    color: var(--text-secondary); 
-  }
-  
-  .star:hover {
-    transform: scale(1.2); 
-    color: var(--primary-main); 
-  }
-  
-  .productCardSpan {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+
+  .productCardSpan,
+  .rating-text {
+    font-size: 0.8rem;
     margin-left: 0.5rem;
   }
-  
+
+  .rating-interactive .star {
+    font-size: 1.5rem;
+    margin: 0 0.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .star {
+    font-size: 1.125rem;
+  }
+
+  .rating-container {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .productCardSpan,
+  .rating-text {
+    font-size: 0.75rem;
+    margin-left: 0.375rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --star-color-empty: #475569;
+    --rating-bg: rgba(0, 0, 0, 0.2);
+    --rating-border: rgba(251, 191, 36, 0.3);
+  }
+
+  .rating-container {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .rating-container:hover {
+    background: rgba(251, 191, 36, 0.1);
+  }
+
+  .rating-compact {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .productCardSpan,
+  .rating-text {
+    color: #cbd5e1;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .star.filled {
+    color: #ff8c00;
+    text-shadow: none;
+  }
+
+  .star.empty {
+    color: #666;
+    border: 1px solid #333;
+    border-radius: 2px;
+  }
+
+  .rating-container {
+    border: 2px solid #333;
+    background: #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    transition: none;
+  }
+
+  .star:hover {
+    transform: none;
+    animation: none;
+  }
+
+  .rating-container:hover .star {
+    animation: none;
+  }
+
+  .star.filled {
+    animation: none;
+  }
+
+  .rating-loading .star {
+    animation: none;
+  }
+}
+
+/* Focus States for Accessibility */
+.star:focus {
+  outline: 2px solid var(--star-color-hover);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.rating-interactive .star:focus {
+  outline: 3px solid var(--star-color-hover);
+  outline-offset: 4px;
+}
+
+/* Keyboard Navigation */
+.rating-container:focus-within {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+}
+
+/* Print Styles */
+@media print {
+  .star {
+    color: #000 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .star.filled {
+    font-weight: bold;
+  }
+
+  .rating-container {
+    background: none !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}

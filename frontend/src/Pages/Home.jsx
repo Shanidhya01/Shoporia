@@ -4,6 +4,7 @@ import "./Styles/Home.css"
 import Navbar from '../components/Navbar'
 import ImageSlider from '../components/ImageSlider'
 import Product from '../components/Product'
+import PageTitle from '../components/PageTitle'
 
 const products = [
   {
@@ -11,7 +12,7 @@ const products = [
             "name": "Product1",
             "description": "Product Description",
             "price": 100,
-            "ratings": 0,
+            "ratings": 3,
             "images": [
                 {
                     "public_id": "this is test id1",
@@ -21,7 +22,7 @@ const products = [
             ],
             "category": "shirt",
             "stock": 10,
-            "numOfReviews": 0,
+            "numOfReviews": 1,
             "reviews": [],
             "createdAt": "2025-09-20T12:06:32.860Z",
             "__v": 0
@@ -31,7 +32,7 @@ const products = [
             "name": "Product401",
             "description": "Product Description",
             "price": 1000,
-            "ratings": 0,
+            "ratings": 4.5,
             "images": [
                 {
                     "public_id": "this is test id1",
@@ -41,7 +42,7 @@ const products = [
             ],
             "category": "Laptop",
             "stock": 10,
-            "numOfReviews": 0,
+            "numOfReviews": 5,
             "user": "68d14585d866bb93d2bfa5cd",
             "reviews": [],
             "createdAt": "2025-09-24T17:44:40.315Z",
@@ -52,7 +53,7 @@ const products = [
 function Home() {
   return (
     <>
-      <div>
+      <PageTitle  title="Home"/>
         <Navbar />
         <ImageSlider />
         <div className='home-container'>
@@ -64,7 +65,6 @@ function Home() {
           </div>
         </div>
         <Footer />
-      </div>
     </>
   )
 }
