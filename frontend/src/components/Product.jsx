@@ -18,7 +18,7 @@ function Product({product}) {
 
   return (
 
-    <Link to={product._id} className='product_id'>
+    <Link to={`/product/${product._id}`} key={product._id} className='product_id'>
       <div className='product-card'>
         <div className="product-image-container">
           <img
