@@ -1,56 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Footer from '../components/Footer'
 import "./Styles/Home.css"
 import Navbar from '../components/Navbar'
 import ImageSlider from '../components/ImageSlider'
 import Product from '../components/Product'
 import PageTitle from '../components/PageTitle'
-
-const products = [
-  {
-            "_id": "68ce98c81dac062361aa77df",
-            "name": "Product1",
-            "description": "Product Description",
-            "price": 100,
-            "ratings": 3,
-            "images": [
-                {
-                    "public_id": "this is test id1",
-                    "url": "This is test url",
-                    "_id": "68ce98c81dac062361aa77e0"
-                }
-            ],
-            "category": "shirt",
-            "stock": 10,
-            "numOfReviews": 1,
-            "reviews": [],
-            "createdAt": "2025-09-20T12:06:32.860Z",
-            "__v": 0
-        },
-        {
-            "_id": "68d42e08f9bd10fc5c06712c",
-            "name": "Product401",
-            "description": "Product Description",
-            "price": 1000,
-            "ratings": 4.5,
-            "images": [
-                {
-                    "public_id": "this is test id1",
-                    "url": "This is test url",
-                    "_id": "68d42e08f9bd10fc5c06712d"
-                }
-            ],
-            "category": "Laptop",
-            "stock": 10,
-            "numOfReviews": 5,
-            "user": "68d14585d866bb93d2bfa5cd",
-            "reviews": [],
-            "createdAt": "2025-09-24T17:44:40.315Z",
-            "__v": 0
-        },
-]
+import { useDispatch, useSelector } from 'react-redux'
+import { getProduct } from '../features/products/productSlice'
 
 function Home() {
+
+  const {loading,error,products,productCount} = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProduct());
+    if(error){
+      console.log(error);
+    }
+  },[dispatch]);
+
   return (
     <>
       <PageTitle  title="Home"/>

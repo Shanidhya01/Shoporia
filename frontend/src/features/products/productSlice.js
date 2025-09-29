@@ -1,13 +1,15 @@
 import React from 'react'
 import axios from 'axios';
 
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const getProduct = createAsyncThunk('product/getProduct',async(_,{rejectWithValue}) => {
+export const getProduct = createAsyncThunk('product/getProduct',async(_,{rejectWithValue}) => {
   try {
     const link = `/api/v1/products`;
     const data = await axios.get(link);
     console.log('Response',data);
+    return data.data;
   } catch (error) {
     console.log(error);
     return rejectWithValue(error.response?.data || error.message);
