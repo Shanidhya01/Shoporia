@@ -20,9 +20,9 @@ function Home() {
   }, [dispatch]);
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       console.log(error.message);
-      toast.error(error.message,{ position: "top-center", autoClose: 3000 });
+      toast.error(error.message, { position: "top-center", autoClose: 3000 });
       dispatch(removeErrors());
     }
   }, [dispatch, error]);
@@ -39,8 +39,8 @@ function Home() {
           <div className="home-container">
             <h2 className="home-heading">Welcome to Shoporia</h2>
             <div className="home-product-container">
-              {products.map((product, index) => (
-                <Product key={index} product={product} />
+              {products.map((product) => (
+                <Product key={product._id} product={product} />
               ))}
             </div>
           </div>

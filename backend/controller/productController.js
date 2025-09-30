@@ -117,6 +117,15 @@ export const deleteProduct = async (req, res) => {
 //5 - Accessing Single Product Details
 export const getSingleProduct = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    // Check for valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({
+        success: false,
+        error: "Product not found",
+      });
+    }
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({
@@ -131,7 +140,7 @@ export const getSingleProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: error.message,
+      error: error.message || "Failed to fetch product",
     });
   }
 };

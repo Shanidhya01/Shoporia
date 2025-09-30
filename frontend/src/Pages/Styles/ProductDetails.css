@@ -117,6 +117,13 @@
     background: var(--bg-secondary);
   }
   
+  .reviews-title{
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--bg-primary);
+    text-align: left;
+  }
 
   .reviews-container {
     grid-column: 1 / -1;

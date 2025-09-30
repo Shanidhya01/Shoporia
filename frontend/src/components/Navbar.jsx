@@ -6,9 +6,13 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from 'react';
+// import './Styles/Search.css';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   }
@@ -33,13 +37,15 @@ function Navbar() {
 
         <div className="navbar-icons">
           <div className="search-container">
-            <form className='search-form'>
+            <form className={`search-form ${isSearchOpen ? "active" : ""}`}>
               <input
                 type="text"
                 placeholder='Search products...'
                 className='search-input'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type='submit' className='search-icon'>
+              <button type='button' className='search-icon' onClick={toggleSearch}>
                 <SearchIcon focusable="false" />
               </button>
             </form>

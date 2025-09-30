@@ -30,7 +30,7 @@ function Product({product}) {
         </div>
         <div className="product-details">
           <h3 className="product-title">{product.name}</h3>
-          <span className='product-price'>
+          <span className='home-price'>
             <strong>Price:</strong> {product.price?.toLocaleString()}<span className="product-price-label">/-</span>
           </span>
           <div className="rating_container">

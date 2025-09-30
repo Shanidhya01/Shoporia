@@ -13,7 +13,7 @@ import Loader from '../components/Loader'
 function ProductDetails() {
 
   const [userRating, setUserRating] = React.useState(0);
-  
+
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
@@ -48,48 +48,61 @@ function ProductDetails() {
       </>
     )
   }
+  if(error || !product){
+    return(
+      <>
+        <PageTitle title="Error | Product Details" />
+        <Navbar />
+        <Footer />
+      </>
+    )
+  }
   return (
     <>
-      <PageTitle title="Product Name - Details" />
+      <PageTitle title={`${product.name} Details`} />
       <Navbar />
       <div className="product-details-container">
         <div className="product-detail-container">
           <div className="product-image-container">
-            <img src="" alt="Product" className="product-image" />
+            <img src={product.images[0].url} alt="Product" className="product-image" />
           </div>
 
           <div className="product-info">
-            <h2>Product Name</h2>
+            <h2>{product.name}</h2>
             <p className="product-description">
-              This is a detailed description of the product. It includes features,
-              specifications, and other relevant information that helps the customer
-              make an informed decision.
+              {product.description}
             </p>
             <p className="product-price">
-              Price: $99.99
+              Price: ₹ {product.price}
             </p>
             <div className="product-rating">
               <Rating
-                value={4}
+                value={product.rating}
                 disabled={true}
               />
               <span className="productCardSpan">
-                (4 Reviews)
+                ({product.numOfReviews}{product.numOfReviews === 1 ? " Review" : " Reviews"})
               </span>
             </div>
 
             <div className="stock-status">
-              <span className="in-stock">
-                In Stock (20 items available)
+              <span className={product.stock > 1 ? `in-stock` : `out-of-stock`}>
+                {product.stock > 0 ? `In Stock (${product.stock} items available)` : "Out of Stock"}
               </span>
             </div>
 
-            <div className="quantity-controls">
-              <span className="quantity-label">Quantity:</span>
-              <button className="quantity-button">-</button>
-              <input type="text" value={1} readOnly className="quantity-value" />
-              <button className="quantity-button">+</button>
-            </div>
+            {
+              product.stock > 1 && (
+              <>
+                <div className="quantity-controls">
+                  <span className="quantity-label">Quantity:</span>
+                  <button className="quantity-button">-</button>
+                  <input type="text" value={1} readOnly className="quantity-value" />
+                  <button className="quantity-button">+</button>
+                </div>
+              </>
+              )
+            }
 
             <button className="add-to-cart-btn">
               Add to Cart
@@ -98,9 +111,8 @@ function ProductDetails() {
             <form className="review-form">
               <h3>Write a Review</h3>
               <Rating
-                value={0}
-                disabled={false}
-                onRatingChange={handleRatingChange}
+                value={userRating}
+                onChange={(event, newValue) => handleRatingChange(newValue)}
               />
               <textarea
                 placeholder="Write your review here..."
@@ -113,18 +125,28 @@ function ProductDetails() {
           </div>
         </div>
         <div className="reviews-container">
-          <h3>Customer Reviews</h3>
-          <div className="review-section">
-            <div className="review-item">
-              <div className="review-header">
-                <Rating value={5} disabled={true} />
-              </div>
-              <p className="review-comment">
-                "Great product! Highly recommend."
-              </p>
-              <p className='review-name'>John Doe</p>
-            </div>
+          <h3 className='reviews-title'>Customer Reviews</h3>
+          {
+            product.reviews && product.reviews.length > 0 ?(
+            <div className="reviews-section">
+            {
+              product.reviews.map((review) => (
+                <div className="review-item" key={review._id}>
+                  <div className="review-header">
+                    <Rating value={review.rating} disabled={true} />
+                  </div>
+                  <p className="review-comment">
+                    {review.comment}
+                  </p>
+                  <p className='review-name'>By : {review.name}</p>
+                </div>
+              ))
+            }
           </div>
+          ): (
+            <p className="no-reviews">No reviews yet. Be the first to leave one!</p>
+          )
+          }
         </div>
       </div>
       <Footer />
