@@ -15,8 +15,10 @@ function Home() {
     (state) => state.product
   );
   const dispatch = useDispatch();
+  const [searchKeyword, setSearchKeyword] = React.useState("");
+
   useEffect(() => {
-    dispatch(getProduct());
+    dispatch(getProduct({ keyword: "" }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -26,6 +28,10 @@ function Home() {
       dispatch(removeErrors());
     }
   }, [dispatch, error]);
+
+  useEffect(() => {
+    dispatch(getProduct({ keyword: searchKeyword }));
+  }, [dispatch, searchKeyword]);
 
   return (
     <>
@@ -39,9 +45,13 @@ function Home() {
           <div className="home-container">
             <h2 className="home-heading">Welcome to Shoporia</h2>
             <div className="home-product-container">
-              {products.map((product) => (
-                <Product key={product._id} product={product} />
-              ))}
+              {products.length === 0 && searchKeyword ? (
+                <div className="no-products-message">
+                  No products found for "{searchKeyword}".
+                </div>
+              ) : (
+                products.map((product) => <Product key={product._id} product={product} />)
+              )}
             </div>
           </div>
           <Footer />

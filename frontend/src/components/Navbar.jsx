@@ -1,5 +1,5 @@
 import "./Styles/Navbar.css";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -17,6 +17,28 @@ function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   }
   const isAuthenticated = false;
+  const navigate = useNavigate();
+  const [q, setQ] = React.useState("");
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const keyword = q.trim();
+    // absolute path, not relative
+    navigate(keyword ? `/products?keyword=${encodeURIComponent(keyword)}` : `/products`);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if(searchQuery.trim()) {
+      navigate(`products?keyword=${encodeURIComponent(searchQuery.trim())}`);
+    }
+    else{
+      navigate('/products');
+    }
+    console.log("Searching for:", searchQuery);
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  }
   
   return (
     <nav className='navbar'>
@@ -37,7 +59,7 @@ function Navbar() {
 
         <div className="navbar-icons">
           <div className="search-container">
-            <form className={`search-form ${isSearchOpen ? "active" : ""}`}>
+            <form className={`search-form ${isSearchOpen ? "active" : ""}`} onSubmit={handleSearchSubmit}>
               <input
                 type="text"
                 placeholder='Search products...'

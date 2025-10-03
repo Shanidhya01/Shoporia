@@ -25,10 +25,12 @@ export const getAllProducts = async (req, res) => {
     const limit = Math.min(50, Number(req.query.limit) || 10);
     const skip = (page - 1) * limit;
 
-    // Build filters (adjust fields to your schema)
+    // Build filters
     const filter = {};
     if (req.query.keyword) {
-      filter.title = { $regex: req.query.keyword, $options: "i" };
+      const rx = new RegExp(req.query.keyword, "i");
+      // support both fields
+      filter.$or = [{ name: rx }, { title: rx }];
     }
     if (req.query.category) filter.category = req.query.category;
     if (req.query.brand) filter.brand = req.query.brand;
