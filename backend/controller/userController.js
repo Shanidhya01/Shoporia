@@ -3,48 +3,49 @@ import User from "../models/userModel.js";
 import { sendToken } from "../utils/jwtToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
+import cloudinary from "cloudinary";
 
 // Register a User
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    // get fields from body
+    const { name, email, password, avatar } = req.body;
+
+    // validate BEFORE any upload
     if (!name || !email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "name, email and password are required" 
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all the details",
       });
     }
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "User already exists with this email" 
+
+    // optional avatar upload
+    let uploaded = null;
+    if (avatar) {
+      uploaded = await cloudinary.uploader.upload(avatar, {
+        folder: "avatars",
+        width: 150,
+        crop: "scale",
       });
     }
+
     const user = await User.create({
       name,
       email,
       password,
-      avatar: { 
-        public_id: "sample_id", 
-        url: "sample_url" 
-      },
+      avatar: uploaded
+        ? { public_id: uploaded.public_id, 
+          url: uploaded.secure_url 
+        }
+        : undefined,
     });
-    const token = user.getJWTToken();
-    const safeUser = { 
-      id: user._id, 
-      name: user.name, 
-      email: user.email, 
-      role: user.role, 
-      avatar: user.avatar 
-    };
-    sendToken(user, 201, res);
+
+    return res.status(201).json({ success: true, user });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ 
-      success: false, 
-      message: error.message 
-    });
+    console.error("registerUser error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: error.message || "Registration failed" });
   }
 };
 

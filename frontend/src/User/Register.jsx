@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Styles/Form.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { register, removeErrors, removeSuccess } from "../features/user/userSlice";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Register() {
@@ -10,62 +8,55 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    avatar: null,
+    avatar: "",
   });
-  const [avatarPreview, setAvatarPreview] = useState("../images/Profile.webp");
-  const { success, loading, error } = useSelector(state => state.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [avatarPreview, setAvatarPreview] = useState("/default-avatar.png");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // FIX: define loading
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) =>
+    setFormData((s) => ({ ...s, [e.target.name]: e.target.value }));
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, avatar: file });
-      setAvatarPreview(URL.createObjectURL(file));
-    }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData((s) => ({ ...s, avatar: reader.result }));
+      setAvatarPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!name || !email || !password) {
-      toast.error("Please fill all the fields", { position: "top-center", autoClose: 3000 });
+    const { name, email, password } = formData;
+    if (!name || !email || !password) {
+      toast.error("Please fill all the details", { position: "top-center", toastId: "register-missing" });
       return;
     }
-    const formData = new FormData();
-    formData.set("name", formData.name);
-    formData.set("email", formData.email);
-    formData.set("password", formData.password);
-    if (formData.avatar) {
-      formData.set("avatar", formData.avatar);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/v1/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
+      toast.success("Registered successfully", { position: "top-center" });
+    } catch (err) {
+      toast.error(err.message, { position: "top-center", toastId: "register-error" });
+    } finally {
+      setLoading(false);
     }
-    console.log(formData);
-    dispatch(register(formData));
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error.message, { position: "top-center", autoClose: 3000 });
-      dispatch(removeErrors());
-    }
-  }, [error, dispatch]);
-
-  useEffect(() => {
-    if (success) {
-      toast.success("Registration successful!", { position: "top-center", autoClose: 3000 });
-      dispatch(removeSuccess());
-      navigate("/login");
-    }
-  }, [success, dispatch]);
 
   return (
     <div className="form-container">
       <div className="container">
-        {/* Left side - Image section */}
+        {/* Left image section (if used in your CSS layout) */}
         <div className="form-image-section">
           <div className="form-image-content">
             <div className="form-image-icon">
@@ -110,9 +101,9 @@ function Register() {
           </div>
         </div>
 
-        {/* Right side - Form section */}
+        {/* Right side - Form */}
         <div className="form-content">
-          <form className="form" onSubmit={handleSubmit} encType="multipart/form-data">
+          <form className="form" onSubmit={handleSubmit}>
             <h2>Sign Up</h2>
 
             <div className="input-group">
@@ -120,6 +111,7 @@ function Register() {
                 type="text"
                 name="name"
                 placeholder="Full Name"
+                autoComplete="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -131,6 +123,7 @@ function Register() {
                 type="email"
                 name="email"
                 placeholder="Email Address"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -142,6 +135,7 @@ function Register() {
                 type="password"
                 name="password"
                 placeholder="Password"
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -152,14 +146,14 @@ function Register() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleFileChange}
                 className="file-input"
+                onChange={handleFileChange}
               />
               <img src={avatarPreview} alt="Avatar" className="avatar" />
             </div>
 
-            <button type="submit" className="authBtn">
-              Sign Up
+            <button type="submit" className="authBtn" disabled={loading}>
+              {loading ? "Signing up..." : "Sign Up"}
             </button>
 
             <p className="form-links">
