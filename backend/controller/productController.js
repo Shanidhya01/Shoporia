@@ -22,8 +22,8 @@ export const createProduct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const page = Math.max(1, Number(req.query.page) || 1);
-    const limit = Math.min(50, Number(req.query.limit) || 10);
-    const skip = (page - 1) * limit;
+    const resultPerPage = Math.min(50, Number(req.query.limit) || 4);
+    const skip = (page - 1) * resultPerPage;
 
     // Build filters
     const filter = {};
@@ -46,12 +46,12 @@ export const getAllProducts = async (req, res) => {
       Product.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit),
+        .limit(resultPerPage),
     ]);
 
     return res.json({
       success: true,
-      pagination: { page, limit, total, filtered },
+      pagination: { page, resultPerPage, total, filtered },
       count: products.length,
       products,
     });
