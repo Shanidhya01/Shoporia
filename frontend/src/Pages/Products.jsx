@@ -9,6 +9,7 @@ import { getProduct, removeErrors } from "../features/products/productSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { useLocation, useSearchParams } from "react-router-dom";
+import NoProduct from "../components/NoProduct";
 
 function Products() {
   const { loading, error, products } = useSelector((state) => state.product); //redux state
@@ -32,6 +33,13 @@ function Products() {
   }, [error, dispatch]);
 
   if (loading) return <Loader />;
+  if (error) {
+    return (
+      <>
+        <NoProduct keyword={keyword} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -45,10 +53,10 @@ function Products() {
         <div className="products-section">
           <div className="products-product-container">
             {products.length === 0 ? (
-              <div className="no-products-message">
-                No products found
-                {keyword ? ` for "${keyword}"` : ""}.
-              </div>
+              <>
+                <NoProduct keyword={keyword} />
+                {toast.error("No products found.")}
+              </>
             ) : (
               products.map((product) => (
                 <Product key={product._id} product={product} />

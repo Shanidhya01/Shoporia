@@ -1,50 +1,35 @@
 import "./Styles/Navbar.css";
-import {Link, useNavigate} from "react-router-dom";
-import SearchIcon from '@mui/icons-material/Search';
+import { Link, useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
-import React from 'react';
-// import './Styles/Search.css';
+import React from "react";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  }
   const isAuthenticated = false;
   const navigate = useNavigate();
-  const [q, setQ] = React.useState("");
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const keyword = q.trim();
-    // absolute path, not relative
-    navigate(keyword ? `/products?keyword=${encodeURIComponent(keyword)}` : `/products`);
-  };
+  const toggleMenu = () => setIsMenuOpen((s) => !s);
+  const toggleSearch = () => setIsSearchOpen((s) => !s);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if(searchQuery.trim()) {
-      navigate(`products?keyword=${encodeURIComponent(searchQuery.trim())}`);
-    }
-    else{
-      navigate('/products');
-    }
-    console.log("Searching for:", searchQuery);
+    const keyword = searchQuery.trim();
+    // ABSOLUTE PATH to avoid /products/products...
+    navigate(keyword ? `/products?keyword=${encodeURIComponent(keyword)}` : `/products`);
     setIsSearchOpen(false);
     setSearchQuery("");
-  }
-  
+  };
+
   return (
-    <nav className='navbar'>
+    <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo">
-          {/* <img src="/logo.png" alt="Shoporia Logo" className='navbar-logo' /> */}
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Shoporia</Link>
         </div>
 
@@ -62,16 +47,18 @@ function Navbar() {
             <form className={`search-form ${isSearchOpen ? "active" : ""}`} onSubmit={handleSearchSubmit}>
               <input
                 type="text"
-                placeholder='Search products...'
-                className='search-input'
+                placeholder="Search products..."
+                className="search-input"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type='button' className='search-icon' onClick={toggleSearch}>
-                <SearchIcon focusable="false" />
+              {/* Make this a submit to run the form handler */}
+              <button type="submit" className="search-icon" aria-label="Search">
+                <SearchIcon />
               </button>
             </form>
           </div>
+
           <div className="cart-container">
             <Link to="/cart">
               <ShoppingCartIcon className="icon" />
@@ -79,24 +66,19 @@ function Navbar() {
             </Link>
           </div>
 
-          {
-            !isAuthenticated && <Link to="/register" className="register-link">
+          {!isAuthenticated && (
+            <Link to="/register" className="register-link">
               <PersonAddIcon className="icon" />
             </Link>
-          }
+          )}
 
           <div className="navbar-hamburger" onClick={toggleMenu}>
-            {isMenuOpen ? 
-              <CloseIcon className="icon"/> 
-                  :
-                <MenuIcon className="icon"/>
-              }
+            {isMenuOpen ? <CloseIcon className="icon" /> : <MenuIcon className="icon" />}
           </div>
-
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
