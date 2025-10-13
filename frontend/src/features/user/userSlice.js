@@ -33,12 +33,22 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
   }
 });
 
+// Load User
 export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWithValue }) => {
   try {
     const { data } = await axios.get("/api/v1/profile");
     return data;
   } catch (error) {
     return rejectWithValue(error.response?.data || "Failed to load user . Please try again.");
+  }
+});
+
+// Logout User
+export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
+  try {
+    await axios.post("/api/v1/logout",{ withCredentials: true });
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Failed to logout . Please try again.");
   }
 });
 
@@ -100,8 +110,8 @@ const userSlice = createSlice({
         state.user = null;
       });
 
-      // Load User
-      builder
+    // Load User
+    builder
       .addCase(loadUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -119,6 +129,23 @@ const userSlice = createSlice({
         state.error = action.payload?.message || "Failed to load user . Please try again.";
         state.isAuthenticated = false;
         state.user = null;
+      });
+
+    // Logout User
+    builder
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to logout . Please try again.";
       });
   },
 })

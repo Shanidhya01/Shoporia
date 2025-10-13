@@ -6,6 +6,7 @@
   --navbar-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   --navbar-shadow-scrolled: 0 8px 32px rgba(0, 0, 0, 0.2);
   --primary-gradient: linear-gradient(135deg, #4285f4, #34a853);
+  --primary-main: #4285f4;
   --primary-rgb: 66, 133, 244;
   --text-primary: #ffffff;
   --text-secondary: #b8c5d1;
@@ -20,8 +21,8 @@
   top: 0;
   width: 100%;
   background: var(--navbar-bg);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--navbar-shadow);
   z-index: 1000;
@@ -33,7 +34,7 @@
   box-shadow: var(--navbar-shadow-scrolled);
 }
 
-/* Consistent container */
+/* Navbar container */
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -41,11 +42,10 @@
   height: var(--navbar-height);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  gap: 5rem;
 }
 
-/* Professional logo */
+/* Logo section */
 .navbar-logo {
   flex-shrink: 0;
 }
@@ -67,12 +67,10 @@
   filter: brightness(1.1);
 }
 
-/* Consistent navigation */
+/* Navigation links */
 .navbar-links {
-  flex: 1;
   display: flex;
   justify-content: center;
-  margin: 0 2rem;
 }
 
 .navbar-links ul {
@@ -115,36 +113,55 @@
   color: var(--text-primary);
 }
 
-/* Consistent right section */
-.navbar-icons {
+/* Middle section for search and cart */
+.navbar-middle {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-left: auto;
+}
+
+/* Right section layout */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
   flex-shrink: 0;
 }
 
-/* Professional search */
-.search-item {
+.navbar-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+}
+
+/* Search styling */
+.search-container {
+  position: relative;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1.25rem;
+  padding: 0.6rem 1rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   transition: all 0.3s ease;
-  min-width: 280px;
+  min-width: 200px;
+  max-width: 280px;
   backdrop-filter: blur(10px);
 }
 
-.search-item:hover {
+.search-form:hover {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.search-item:focus-within {
+.search-form:focus-within {
   background: rgba(255, 255, 255, 0.2);
-  border-color: var(--primary-main);
+  border-color: #4285f4;
   box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
 }
 
@@ -163,15 +180,119 @@
 }
 
 .search-icon {
+  background: none;
+  border: none;
   color: var(--text-secondary);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search-item:focus-within .search-icon {
-  color: var(--primary-main);
+.search-icon:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Consistent icons */
+.search-form:focus-within .search-icon {
+  color: #4285f4;
+}
+
+/* Cart styling */
+.cart-container {
+  position: relative;
+}
+
+.cart-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-decoration: none;
+}
+
+.cart-icon {
+  color: var(--text-primary);
+  padding: 0.6rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.cart-icon:hover {
+  background: var(--hover-bg);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--primary-gradient);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--navbar-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile section */
+.navbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.navbar-profile:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* General icon styling */
 .icon {
   color: var(--text-primary);
   padding: 0.75rem;
@@ -194,31 +315,8 @@
   transform: translateY(-1px);
 }
 
-/* Cart badge */
-.cart-container {
-  position: relative;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: var(--primary-gradient);
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 700;
-  min-width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--navbar-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Professional register button */
-.register-btn {
+/* Register button */
+.register-link {
   background: var(--primary-gradient);
   color: white;
   padding: 0.75rem 1.5rem;
@@ -235,7 +333,7 @@
   text-decoration: none;
 }
 
-.register-btn:hover {
+.register-link:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
 }
@@ -284,12 +382,13 @@
     gap: 1.5rem;
   }
   
-  .navbar-links {
-    margin: 0 1rem;
+  .navbar-middle {
+    gap: 0.75rem;
   }
   
-  .search-item {
-    min-width: 240px;
+  .search-form {
+    min-width: 180px;
+    max-width: 220px;
   }
 }
 
@@ -307,6 +406,7 @@
     left: 0;
     right: 0;
     background: var(--navbar-bg);
+    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     padding: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -346,19 +446,30 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  .navbar-middle {
+    gap: 0.5rem;
+  }
+
+  .navbar-right {
+    gap: 0.75rem;
+  }
+
+  .navbar-actions {
+    gap: 0.75rem;
+  }
+
+  .navbar-profile {
+    display: none;
+  }
+
+  .search-form {
+    min-width: 160px;
+    max-width: 180px;
+  }
+
   .navbar-hamburger {
     display: flex;
     flex-direction: column;
-  }
-
-  .search-item {
-    width: 100%;
-    margin: 1rem 0;
-    min-width: auto;
-  }
-
-  .navbar-icons {
-    gap: 0.75rem;
   }
 
   .icon {
@@ -367,7 +478,13 @@
     min-height: 40px;
   }
 
-  .register-btn {
+  .cart-icon {
+    padding: 0.5rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .register-link {
     padding: 0.65rem 1.25rem;
     font-size: 0.85rem;
   }
@@ -383,8 +500,22 @@
     gap: 0.75rem;
   }
 
-  .navbar-icons {
+  .navbar-middle {
+    gap: 0.4rem;
+  }
+
+  .navbar-right {
     gap: 0.5rem;
+  }
+
+  .navbar-actions {
+    gap: 0.5rem;
+  }
+
+  .search-form {
+    min-width: 140px;
+    max-width: 160px;
+    padding: 0.5rem 0.75rem;
   }
 
   .icon {
@@ -393,15 +524,21 @@
     min-height: 36px;
   }
 
-  .register-btn {
+  .cart-icon {
+    padding: 0.4rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .register-link {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
 
   .cart-badge {
     font-size: 0.65rem;
-    min-width: 1.2rem;
-    height: 1.2rem;
+    min-width: 1.1rem;
+    height: 1.1rem;
   }
 
   .navbar-logo a {
@@ -416,48 +553,7 @@ a:focus, button:focus {
   border-radius: 4px;
 }
 
-/* Remove excessive animations */
-.navbar {
-  animation: none;
+/* Smooth animations */
+* {
+  transition: all 0.3s ease;
 }
-
-/* Force visibility for all elements */
-.navbar-icons * {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Clean up any conflicting styles */
-.icon::before {
-  display: none;
-}
-
-.navbar-links li a::before,
-.navbar-links li a::after {
-  display: none;
-}
-
-.search-item::before {
-  display: none;
-}
-
-.register-btn::before {
-  display: none;
-}
-
-/* Remove excessive keyframe animations */
-@keyframes activeLink,
-@keyframes cartBounce,
-@keyframes fadeInNavbar {
-  from { opacity: 1; }
-  to { opacity: 1; }
-}
-
-.navbar-links li a.active {
-  animation: none;
-}
-
-.cart-badge {
-  animation: none;
-}
-

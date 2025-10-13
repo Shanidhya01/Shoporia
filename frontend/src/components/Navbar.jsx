@@ -6,12 +6,13 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const isAuthenticated = false;
+  const { isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen((s) => !s);
@@ -42,28 +43,30 @@ function Navbar() {
           </ul>
         </div>
 
-        <div className="navbar-icons">
-          <div className="search-container">
-            <form className={`search-form ${isSearchOpen ? "active" : ""}`} onSubmit={handleSearchSubmit}>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="search-input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {/* Make this a submit to run the form handler */}
-              <button type="submit" className="search-icon" aria-label="Search">
-                <SearchIcon />
-              </button>
-            </form>
-          </div>
+        <div className="navbar-right">
+          {/* Search and Cart Section */}
+          <div className="navbar-actions">
+            <div className="search-container">
+              <form className={`search-form ${isSearchOpen ? "active" : ""}`} onSubmit={handleSearchSubmit}>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="search-input"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button type="submit" className="search-icon" aria-label="Search">
+                  <SearchIcon />
+                </button>
+              </form>
+            </div>
 
-          <div className="cart-container">
-            <Link to="/cart">
-              <ShoppingCartIcon className="icon" />
-              <span className="cart-badge">3</span>
-            </Link>
+            <div className="cart-container">
+              <Link to="/cart" className="cart-link">
+                <ShoppingCartIcon className="cart-icon" />
+                <span className="cart-badge">3</span>
+              </Link>
+            </div>
           </div>
 
           {!isAuthenticated && (

@@ -1,12 +1,24 @@
 import React from 'react'
 import './Styles/UserDashboard.css'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { logout, removeSuccess } from '../features/user/userSlice';
+
 function UserDashboard({ user }) {
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [menuVisible, setMenuVisible] = React.useState(false);
+
+  function toggleMenu() {
+    setMenuVisible(!menuVisible);
+  }
+
   const options = [
     { name: "Orders", funcName: orders},
-    { name: "Profile", funcName: profile},
-    { name: "Logout", funcName: logout},
+    { name: "Account", funcName: profile},
+    { name: "Logout", funcName: logoutUser},
   ]
   if(user.role === "admin"){
     options.unshift({ 
@@ -23,8 +35,17 @@ function UserDashboard({ user }) {
     navigate("/profile");
   }
 
-  function logout() {
-    console.log("Logout");
+  function logoutUser() {
+    dispatch(logout())
+      .unwrap()
+      .then(() => {
+        toast.success("Logged out successfully", {position: "top-center", autoClose: 3000 });
+        dispatch(removeSuccess());
+        navigate("/login");
+      })
+      .catch((error) => {
+        toast.error(error.message || "Failed to logout. Please try again.", {position: "top-center", autoClose: 3000 });
+      });
   }
 
   function dashboard() {
@@ -32,18 +53,20 @@ function UserDashboard({ user }) {
   }
 
   return (
-    <div className='dashboard-container'>
-      <div className="profile-header">
-        <img src={user.avatar.url?user.avatar.url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'} alt={user.name} className='profile-avatar' />
-        <span className="profile-name">{user.name}</span>
+    <>
+      <div className={`overlay ${menuVisible ? "show" : ""}`} onClick={toggleMenu}></div>
+      <div className='dashboard-container'>
+        <div className="profile-header" onClick={toggleMenu}>
+          <img src={user.avatar.url?user.avatar.url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'} alt={user.name} className='profile-avatar' />
+          <span className="profile-name">{user.name}</span>
+        </div>
+        {menuVisible && (<div className="menu-options">
+            {options.map((item) => (
+              <button className="menu-option-btn" key={item.name} onClick={item.funcName}>{item.name}</button>
+            ))}
+          </div>)}
       </div>
-      <div className="menu-options">
-        {options.map((item) => (
-          <button className="menu-option-btn" key={item.name} onClick={item.funcName}>{item.name}</button>
-        ))}
-        
-      </div>
-    </div>
+    </>
   )
 }
 
