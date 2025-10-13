@@ -33,6 +33,14 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
   }
 });
 
+export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get("/api/v1/profile");
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Failed to load user . Please try again.");
+  }
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -81,14 +89,34 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.success = action.payload.success;
         state.user = action.payload?.user || null;
         state.isAuthenticated = Boolean(action.payload?.user);
-        console.log(state.user);
+        // console.log(state.user);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Login Failed . Please try again.";
+        state.isAuthenticated = false;
+        state.user = null;
+      });
+
+      // Load User
+      builder
+      .addCase(loadUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+        state.user = action.payload?.user || null;
+        state.isAuthenticated = Boolean(action.payload?.user);
+        // console.log(state.user);
+      })
+      .addCase(loadUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to load user . Please try again.";
         state.isAuthenticated = false;
         state.user = null;
       });

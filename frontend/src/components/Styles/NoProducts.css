@@ -1,312 +1,33 @@
-/* Main container - centered with gradient background */
 .no-products-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  padding: 3rem 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  text-align: center;
-  animation: fadeIn 0.6s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Icon container with animated background */
-.no-products-icon {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
-  animation: pulse 2s ease-in-out infinite;
-  position: relative;
-}
-
-.no-products-icon::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background: linear-gradient(135deg, #667eea33 0%, #764ba233 100%);
-  border-radius: 50%;
-  z-index: -1;
-  animation: rotate 3s linear infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.no-products-icon svg {
-  font-size: 3.5rem;
-  color: #fff;
-}
-
-/* Heading with gradient text */
-.no-products-heading {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
-}
-
-/* Message text */
-.no-products-message {
-  font-size: 1.1rem;
-  color: #64748b;
-  margin-bottom: 0.5rem;
-  max-width: 500px;
-  line-height: 1.6;
-}
-
-/* Keyword highlight */
-.no-products-keyword {
-  font-weight: 700;
-  color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  display: inline-block;
-}
-
-/* Suggestion text */
-.no-products-suggestion {
-  font-size: 0.95rem;
-  color: #94a3b8;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
-/* Action buttons container */
-.no-products-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* Primary button */
-.no-products-btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 0.85rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  letter-spacing: 0.02em;
-}
-
-.no-products-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-}
-
-.no-products-btn-primary:active {
-  transform: translateY(0);
-}
-
-/* Secondary button */
-.no-products-btn-secondary {
-  background: #fff;
-  color: #667eea;
-  border: 2px solid #667eea;
-  border-radius: 12px;
-  padding: 0.85rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.02em;
-}
-
-.no-products-btn-secondary:hover {
-  background: #667eea;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
-}
-
-.no-products-btn-secondary:active {
-  transform: translateY(0);
-}
-
-/* Decorative elements */
-.no-products-decoration {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  animation: float 6s ease-in-out infinite;
-}
-
-.no-products-decoration:nth-child(1) {
-  top: -100px;
-  left: -100px;
-}
-
-.no-products-decoration:nth-child(2) {
-  bottom: -100px;
-  right: -100px;
-  animation-delay: 3s;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .no-products-container {
-    padding: 2rem 1.5rem;
-    min-height: 50vh;
-  }
-
-  .no-products-icon {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 1.5rem;
-  }
-
-  .no-products-icon svg {
-    font-size: 3rem;
-  }
-
-  .no-products-heading {
-    font-size: 1.75rem;
-  }
-
-  .no-products-message {
-    font-size: 1rem;
-  }
-
-  .no-products-actions {
+  
+  .no-products-content {
+    height: 400px;
+    display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 300px;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
   }
-
-  .no-products-btn-primary,
-  .no-products-btn-secondary {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .no-products-container {
-    padding: 1.5rem 1rem;
-  }
-
+  
   .no-products-icon {
-    width: 80px;
-    height: 80px;
+    font-size: 3rem;
+    color: #666;
     margin-bottom: 1rem;
   }
-
-  .no-products-icon svg {
-    font-size: 2.5rem;
+  
+  .no-products-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
   }
-
-  .no-products-heading {
-    font-size: 1.5rem;
-  }
-
+  
   .no-products-message {
-    font-size: 0.95rem;
+    color: #666;
+    max-width: 400px;
   }
-
-  .no-products-suggestion {
-    font-size: 0.875rem;
-  }
-
-  .no-products-btn-primary,
-  .no-products-btn-secondary {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.95rem;
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .no-products-container {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  }
-
-  .no-products-message {
-    color: #94a3b8;
-  }
-
-  .no-products-suggestion {
-    color: #64748b;
-  }
-
-  .no-products-btn-secondary {
-    background: #1e293b;
-    color: #667eea;
-    border-color: #667eea;
-  }
-
-  .no-products-btn-secondary:hover {
-    background: #667eea;
-    color: #fff;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .no-products-container,
-  .no-products-icon,
-  .no-products-decoration {
-    animation: none;
-  }
-
-  .no-products-btn-primary:hover,
-  .no-products-btn-secondary:hover {
-    transform: none;
-  }
-}
