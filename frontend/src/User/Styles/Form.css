@@ -450,4 +450,100 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+/* Avatar Upload Styling */
+.avatar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 15px;
+}
+
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  width: 100%;
+  max-width: 400px;
+}
+
+.choose-file-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.choose-file-btn:hover {
+  background-color: #0056b3;
+}
+
+.file-name {
+  flex: 1;
+  color: #666;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar-display {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+/* Remove old avatar styles */
+.avatar-container {
+  display: none;
+}
+
+.avatar-overlay {
+  display: none;
+}
+
+.avatar {
+  display: none;
+}
+
+/* Update container specific styles */
+.update-container {
+  margin: 2rem auto;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+}
+
+.update-container .form-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+}
+
+/* Form labels */
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+
 

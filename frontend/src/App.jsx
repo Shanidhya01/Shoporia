@@ -11,6 +11,8 @@ import UserDashboard from './User/UserDashboard';
 import Profile from './User/Profile';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import UpdateProfile from './User/UpdateProfile';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const {isAuthenticated,user} = useSelector(state=>state.user);
@@ -37,6 +39,18 @@ function App() {
         <Route path='/profile' element={<ProtectedRoutes element={<Profile />} />} />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </Router>
   )
 }

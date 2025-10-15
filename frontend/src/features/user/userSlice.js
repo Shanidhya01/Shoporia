@@ -1,3 +1,4 @@
+import { Update } from "@mui/icons-material";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -52,6 +53,22 @@ export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValu
   }
 });
 
+// Update Profile
+export const updateProfile = createAsyncThunk("user/updateProfile", async (userData, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const { data } = await axios.put("/api/v1/profile/update", userData, config);
+    console.log("Update Profile Data:", data);
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || {message : "Profile Update Failed . Please try again."});
+  }
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -60,13 +77,15 @@ const userSlice = createSlice({
     error: null,
     success: false,
     isAuthenticated: false,
+    message: null,
   },
   reducers : {
     removeErrors : (state) => {
       state.error = null;
     },
     removeSuccess : (state) => {
-      state.success = null;
+      state.success = false;
+      state.message = null;
     }
   },
   extraReducers: (builder) => {
@@ -146,6 +165,25 @@ const userSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to logout . Please try again.";
+      });
+
+      // Update Profile
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success;
+        state.message = action.payload.message || "Profile updated successfully!";
+        state.user = action.payload?.user || null;
+        state.isAuthenticated = Boolean(action.payload?.user);
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Profile Update Failed . Please try again.";
       });
   },
 })
