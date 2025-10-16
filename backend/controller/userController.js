@@ -131,7 +131,7 @@ export const requestPasswordReset = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // 3. Construct reset URL
-    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/reset/${resetToken}`;
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/reset/${resetToken}`;
     const message = `Use the following link to reset your password:\n\n${resetPasswordUrl}\n\nThis link is valid for 10 minutes.\n\nIf you did not request this, please ignore this email.`;
     console.log("Reset URL:", resetPasswordUrl);
     try {

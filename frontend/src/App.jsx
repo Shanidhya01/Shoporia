@@ -13,6 +13,9 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import UpdateProfile from './User/UpdateProfile';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UpdatePassword from './User/UpdatePassword';
+import ForgotPassword from './User/ForgotPassword';
+import ResetPassword from './User/ResetPAssword';
 
 function App() {
   const {isAuthenticated,user} = useSelector(state=>state.user);
@@ -35,8 +38,11 @@ function App() {
         <Route path='/products/:keyword' element={<Products />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/password/forgot' element={<ForgotPassword />} />
         <Route path='/profile/update' element={<ProtectedRoutes element={<UpdateProfile />} />} />
         <Route path='/profile' element={<ProtectedRoutes element={<Profile />} />} />
+        <Route path='/password/update' element={<ProtectedRoutes element={<UpdatePassword />} />} />
+        <Route path='/reset/:token' element={<ResetPassword />} />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
       <ToastContainer 
