@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Styles/Cart.css";
 import { toast } from "react-toastify";
-import { addItemToCart, removeErrors } from "../features/cart/cartSlice";
+import { addItemToCart, removeErrors, removeItemFromCart } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function CartItem({ item }) {
@@ -9,42 +9,68 @@ function CartItem({ item }) {
   const {success,loading,error,message,cartItems} = useSelector((state) => state.cart);
   const [quantity, setQuantity] = React.useState(item.quantity);
   const dispatch = useDispatch();
-
+  // console.log("Subtotal in CartItem:", subtotal);
   const decreaseQuantity = () => {
-      if (quantity > 1) {
-        setQuantity(quantity - 1);
-      } else {
-        toast.error("Quantity cannot be less than 1", {
-          position: "top-center",
-          autoClose: 3000,
-        });
-        dispatch(removeErrors());
-      }
-    };
-  
-    const increaseQuantity = () => {
-      if (quantity < item.stock) {
-        setQuantity(quantity + 1);
-      } else {
-        toast.error(`Only ${item.stock} items in stock`, {
-          position: "top-center",
-          autoClose: 3000,
-        });
-        dispatch(removeErrors());
-      }
-    };
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    } else {
+      toast.error("Quantity cannot be less than 1", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
+    }
+  };
+
+  const increaseQuantity = () => {
+    if (quantity < item.stock) {
+      setQuantity(quantity + 1);
+    } else {
+      toast.error(`Only ${item.stock} items in stock`, {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
+    }
+  };
 
     const handleUpdate = () => {
       if(loading) return;
       if(quantity !== item.quantity){
-        dispatch(addItemToCart({id:item.product,quantity}));
+        // Only send the difference to Redux
+        const diff = quantity - item.quantity;
+        if(diff > 0){
+          dispatch(addItemToCart({id:item.product,quantity:diff}));
+        } else if(diff < 0){
+          // If you want to support decreasing quantity, implement a removeQuantity thunk
+          // For now, just show error
+          toast.error("To decrease quantity, remove and re-add the item.", { position: "top-center", autoClose: 3000 });
+        }
       }
-      
     }
 
     const handleRemove = () => {
-      dispatch(removeFromCart(item.id));
+      if(loading) return;
+      dispatch(removeItemFromCart(item.product));
+      toast.success("Item removed from cart successfully.", {
+        position: "top-center",
+        autoClose: 3000,
+      })
     }
+
+  useEffect(() => {
+    if(error){
+      toast.error(message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+  }, [error, message, dispatch]);
+
+  useEffect(() => {
+    if(success){
+      toast.success(message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+  }, [success, message, dispatch]);
 
   return (
     <div className="cart-item">
@@ -78,8 +104,8 @@ function CartItem({ item }) {
       </div>
 
       <div className="item-actions">
-        <button className="update-item-btn" onClick={handleUpdate}>Update</button>
-        <button className="remove-item-btn" onClick={handleRemove}>Remove</button>
+        <button className="update-item-btn" onClick={handleUpdate} disabled={loading || quantity === item.quantity}>{loading ? "Updating..." : "Update"}</button>
+        <button className="remove-item-btn" disabled={loading} onClick={handleRemove}>Remove</button>
       </div>
     </div>
   );

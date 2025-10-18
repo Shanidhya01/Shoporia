@@ -67,6 +67,7 @@
    
    .shipping-submit-btn {
     grid-column: 1 / -1;
+    width: 100%;
     padding: 14px;
     background: var(--primary-main);
     color: var(--text-light);

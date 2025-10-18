@@ -13,6 +13,7 @@ function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const { isAuthenticated } = useSelector((state) => state.user);
+  const {cartItems} = useSelector((state) => state.cart);
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen((s) => !s);
@@ -64,7 +65,7 @@ function Navbar() {
             <div className="cart-container">
               <Link to="/cart" className="cart-link">
                 <ShoppingCartIcon className="cart-icon" />
-                <span className="cart-badge">3</span>
+                <span className="cart-badge">{cartItems.length}</span>
               </Link>
             </div>
           </div>

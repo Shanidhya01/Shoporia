@@ -32,6 +32,8 @@ const cartSlice = createSlice({
     error: null,
     success: false,
     message: null,
+    removingId: null,
+    shippingInfo : JSON.parse(localStorage.getItem("shippingInfo")) || {}
   },
   reducers: {
     removeErrors: (state) => {
@@ -40,6 +42,17 @@ const cartSlice = createSlice({
     removeMessage: (state) => {
       state.message = null;
       state.success = false;
+    },
+    removeItemFromCart: (state, action) => {
+      const itemId = action.payload;
+      state.removingId = itemId;
+      state.cartItems = state.cartItems.filter((item) => item.product != itemId);
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      state.removingId = null;
+    },
+    saveShippingInfo : (state,action) => {
+      state.shippingInfo = action.payload;
+      localStorage.setItem("shippingInfo",JSON.stringify(state.shippingInfo));
     },
     clearCart: (state) => {
       state.cartItems = [];
@@ -60,8 +73,9 @@ const cartSlice = createSlice({
         );
 
         if (existingItem) {
-          // ✅ Increase quantity if item exists
-          existingItem.quantity += item.quantity;
+          // ✅ Increase quantity if already in cart, but do not exceed stock
+          const newQuantity = existingItem.quantity + item.quantity;
+          existingItem.quantity = newQuantity > item.stock ? item.stock : newQuantity;
           state.message = `${item.name} quantity updated in cart successfully.`;
         } else {
           // ✅ Only push once if item is new
@@ -85,5 +99,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { removeErrors, removeMessage, clearCart } = cartSlice.actions;
+export const { removeErrors, removeMessage, clearCart, removeItemFromCart, saveShippingInfo } = cartSlice.actions;
 export default cartSlice.reducer;
