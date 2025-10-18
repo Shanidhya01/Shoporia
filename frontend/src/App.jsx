@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UpdatePassword from './User/UpdatePassword';
 import ForgotPassword from './User/ForgotPassword';
 import ResetPassword from './User/ResetPAssword';
+import Cart from './Cart/Cart';
 
 function App() {
   const {isAuthenticated,user} = useSelector(state=>state.user);
@@ -43,6 +44,7 @@ function App() {
         <Route path='/profile' element={<ProtectedRoutes element={<Profile />} />} />
         <Route path='/password/update' element={<ProtectedRoutes element={<UpdatePassword />} />} />
         <Route path='/reset/:token' element={<ResetPassword />} />
+        <Route path='/cart' element={<Cart />} />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
       <ToastContainer 
