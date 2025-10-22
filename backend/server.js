@@ -3,8 +3,14 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 dotenv.config({path: "backend/.env"});
 import {v2 as cloudinary} from "cloudinary";
+import Razorpay from "razorpay";
 
 const PORT = process.env.PORT || 3000;
+
+export const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
+});
 
 connectDB();
 cloudinary.config({
