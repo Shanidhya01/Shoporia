@@ -1,10 +1,26 @@
 import React from 'react'
+import './Styles/Payment.css'
+import PageTitle from '../components/PageTitle'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import CheckoutPath from './CheckoutPath'
+import { Link } from 'react-router-dom'
 
 function Payment() {
+
+  const orderItem = JSON.parse(sessionStorage.getItem("orderInfo"));
+
   return (
-    <div>
-      <h1>Payment</h1>
-    </div>
+    <>
+      <PageTitle title="Payment Processing" />
+      <Navbar />
+      <CheckoutPath activePath={2} />
+      <div className="payment-container">
+        <Link to='/order/confirm' className='payment-go-back'>Go Back</Link>
+        <button className='payment-btn'>Pay (₹{orderItem.total})</button>
+      </div>
+      <Footer />
+    </>
   )
 }
 
