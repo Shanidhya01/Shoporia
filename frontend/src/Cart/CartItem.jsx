@@ -13,6 +13,8 @@ function CartItem({ item }) {
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+      // Immediately update the cart in Redux
+      dispatch(addItemToCart({ id: item.product, quantity: -1 }));
     } else {
       toast.error("Quantity cannot be less than 1", {
         position: "top-center",
