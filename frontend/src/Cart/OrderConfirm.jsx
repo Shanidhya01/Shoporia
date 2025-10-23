@@ -23,7 +23,13 @@ function OrderConfirm() {
       shipping,
       total,
     };
-    sessionStorage.setItem("orderInfo", JSON.stringify(data));
+    try {
+      sessionStorage.setItem("orderInfo", JSON.stringify(data));
+      const test = sessionStorage.getItem("orderInfo");
+      console.log("Saved orderInfo in sessionStorage:", test);
+    } catch (e) {
+      console.error("Failed to save orderInfo in sessionStorage:", e);
+    }
     navigate("/process/payment");
   };
 
