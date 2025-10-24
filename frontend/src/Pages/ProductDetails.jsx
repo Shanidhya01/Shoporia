@@ -20,8 +20,11 @@ function ProductDetails() {
   const [comment, setComment] = React.useState("");
   const [userRating, setUserRating] = React.useState(0);
   const [quantity, setQuantity] = React.useState(1);
+  const [selectedImage, setSelectedImage] = React.useState("");
 
-  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector((state) => state.product);
+  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector(
+    (state) => state.product
+  );
   const {
     loading: cartLoading,
     error: cartError,
@@ -127,7 +130,13 @@ function ProductDetails() {
       dispatch(removeSuccess());
       dispatch(getProductDetails(id));
     }
-  }, [dispatch,id ,reviewSuccess]);
+  }, [dispatch, id, reviewSuccess]);
+
+  useEffect(() => {
+    if (product && product.images && product.images.length > 0) {
+      setSelectedImage(product.images[0].url);
+    }
+  }, [product]);
 
   if (loading) {
     return (
@@ -157,10 +166,23 @@ function ProductDetails() {
         <div className="product-detail-container">
           <div className="product-image-container">
             <img
-              src={product.images[0].url}
+              src={selectedImage}
               alt="Product"
-              className="product-image"
+              className="product-detail-image"
             />
+            {product.images.length > 1 && (
+              <div className="product-thumbnails">
+                {product.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image.url}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="thumbnail-image"
+                    onClick={() => setSelectedImage(image.url)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="product-info">
@@ -222,8 +244,12 @@ function ProductDetails() {
                 onChange={(e) => setComment(e.target.value)}
                 required
               ></textarea>
-              <button type="submit" className="submit-review-btn" disabled={reviewLoading}>
-                {reviewLoading ? 'Submitting...' : 'Submit Review'}
+              <button
+                type="submit"
+                className="submit-review-btn"
+                disabled={reviewLoading}
+              >
+                {reviewLoading ? "Submitting..." : "Submit Review"}
               </button>
             </form>
           </div>

@@ -24,24 +24,32 @@
     border-radius: 8px;
     background: #fff;
   }
-  .product-thumbnails{
+
+  .product-thumbnails {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
     margin-top: 20px;
   }
+
   .thumbnail-image {
     width: 80px;
     height: 80px;
     object-fit: cover;
     cursor: pointer;
-    margin-left:10px;
-    transition: transform 0.3s, border 0.3s;
+    border: 2px solid #eee;
+    border-radius: 6px;
+    transition: transform 0.2s, border-color 0.2s;
   }
-  
+
   .thumbnail-image:hover {
-    transform: scale(1.1);
+    transform: scale(1.08);
+    border-color: var(--primary-main, #6C5B7B);
   }
-  
+
   .thumbnail-image.selected {
-    box-shadow: 0 0 2px black;
+    box-shadow: 0 0 4px var(--primary-main, #6C5B7B);
+    border-color: var(--primary-main, #6C5B7B);
   }
   
   

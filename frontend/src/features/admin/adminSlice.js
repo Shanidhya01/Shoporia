@@ -29,6 +29,33 @@ export const createProduct = createAsyncThunk("admin/createProduct", async (prod
   }
 );
 
+// Update Products
+export const updateProduct = createAsyncThunk("admin/updateProduct", async ({id, formData}, { rejectWithValue }) => {
+  try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+      const { data } = await axios.put(`/api/v1/admin/product/${id}`, formData, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update product. Please try again.");
+    }
+  }
+);
+
+// Delete Products
+export const deleteProduct = createAsyncThunk("admin/deleteProduct", async (productId, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.delete(`/api/v1/admin/product/${productId}`);
+      return { productId };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to delete product. Please try again.");
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -36,6 +63,8 @@ const adminSlice = createSlice({
     success: false,
     error: null,
     loading: false,
+    product: {},
+    deleting: {},
   },
   reducers: {
     removeErrors : (state) => {
@@ -74,6 +103,37 @@ const adminSlice = createSlice({
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to create product. Please try again.";
+      });
+
+      builder
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload.success;
+        state.product = action.payload.product;
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update product. Please try again.";
+      });
+
+      builder
+      .addCase(deleteProduct.pending, (state, action) => {
+        const productId = action.meta.arg;
+        state.deleting[productId] = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        const productId = action.payload.productId;
+        state.deleting[productId] = false; // Set loading state to false when deletion is successful
+        state.products = state.products.filter((product) => product._id !== productId);
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        const productId = action.meta.arg;
+        state.deleting[productId] = false;
+        state.error = action.payload || "Failed to delete product. Please try again.";
       });
   },
 });

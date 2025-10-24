@@ -44,6 +44,8 @@
   }
   .update-product-select{
     width: 94%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     padding: 12px 16px;
     margin:0 auto 30px;
   }
