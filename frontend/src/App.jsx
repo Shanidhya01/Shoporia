@@ -23,6 +23,9 @@ import Payment from './Cart/Payment';
 import PaymentSuccess from './Cart/PaymentSuccess';
 import MyOrders from './Order/MyOrders';
 import OrderDetails from './Order/OrderDetails';
+import Dashboard from './Admin/Dashboard';
+import ProductsList from './Admin/ProductsList';
+import CreateProduct from './Admin/CreateProduct';
 
 function App() {
   const {isAuthenticated,user} = useSelector(state=>state.user);
@@ -34,44 +37,49 @@ function App() {
     }
   },[dispatch])
   console.log(isAuthenticated,user);
-  
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path='/products' element={<Products />} />
-        <Route path='/products/:keyword' element={<Products />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/password/forgot' element={<ForgotPassword />} />
-        <Route path='/profile/update' element={<ProtectedRoutes element={<UpdateProfile />} />} />
-        <Route path='/profile' element={<ProtectedRoutes element={<Profile />} />} />
-        <Route path='/password/update' element={<ProtectedRoutes element={<UpdatePassword />} />} />
-        <Route path='/reset/:token' element={<ResetPassword />} />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/shipping' element={<ProtectedRoutes element={<Shipping />} />} />
-        <Route path='/order/confirm' element={<ProtectedRoutes element={<OrderConfirm />} />} />
-        <Route path='/process/payment' element={<ProtectedRoutes element={<Payment />} />} />
-        <Route path='/paymentSuccess' element={<ProtectedRoutes element={<PaymentSuccess />} />} />
-        <Route path='/orders/user' element={<ProtectedRoutes element={<MyOrders />} />} />
-        <Route path='/order/:orderID' element={<ProtectedRoutes element={<OrderDetails />} />} />
-      </Routes>
-      {isAuthenticated && <UserDashboard user={user} />}
-      <ToastContainer 
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </Router>
+    <div className="app-wrapper">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path='/products' element={<Products />} />
+          <Route path='/products/:keyword' element={<Products />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/password/forgot' element={<ForgotPassword />} />
+          <Route path='/profile/update' element={<ProtectedRoutes element={<UpdateProfile />} />} />
+          <Route path='/profile' element={<ProtectedRoutes element={<Profile />} />} />
+          <Route path='/password/update' element={<ProtectedRoutes element={<UpdatePassword />} />} />
+          <Route path='/reset/:token' element={<ResetPassword />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/shipping' element={<ProtectedRoutes element={<Shipping />} />} />
+          <Route path='/order/confirm' element={<ProtectedRoutes element={<OrderConfirm />} />} />
+          <Route path='/process/payment' element={<ProtectedRoutes element={<Payment />} />} />
+          <Route path='/paymentSuccess' element={<ProtectedRoutes element={<PaymentSuccess />} />} />
+          <Route path='/orders/user' element={<ProtectedRoutes element={<MyOrders />} />} />
+          <Route path='/order/:orderID' element={<ProtectedRoutes element={<OrderDetails />} />} />
+          {/* Admin Routes */}
+          <Route path='/admin/dashboard' element={<ProtectedRoutes element={<Dashboard />} adminOnly={true} />} />
+          <Route path='/admin/products' element={<ProtectedRoutes element={<ProductsList />} adminOnly={true} />} />
+          <Route path='/admin/product/create' element={<ProtectedRoutes element={<CreateProduct />} adminOnly={true} />} />
+        </Routes>
+        {isAuthenticated && <UserDashboard user={user} />}
+        <ToastContainer 
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </Router>
+    </div>
   )
 }
 
