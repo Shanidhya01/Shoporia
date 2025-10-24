@@ -1,7 +1,5 @@
 import React from 'react'
 import axios from 'axios';
-
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const getProduct = createAsyncThunk('product/getProduct',async({keyword,page=1,category},{rejectWithValue}) => {
@@ -32,12 +30,32 @@ export const getProductDetails = createAsyncThunk('product/getProductDetails',as
   }
 })
 
+// Submit Review
+export const createReview = createAsyncThunk('product/createReview',async({rating,comment,productId},{rejectWithValue}) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const link = `/api/v1/review`;
+    const {data} = await axios.put(link,{rating,comment,productId},config);
+    // console.log('Response',data);
+    return data.data;
+  } catch (error) {
+    console.log(error);
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
+
 const productSlice = createSlice({
   name: 'product',
   initialState: {
     products: [],
     loading: false,
     error: null,
+    reviewSuccess: false,
+    reviewLoading: false,
 
     // pagination
     page: 1,
@@ -53,7 +71,10 @@ const productSlice = createSlice({
   reducers: {
     removeErrors: (state) => {
       state.error = null;
-    }
+    },
+    removeSuccess: (state) => {
+      state.reviewSuccess = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -106,8 +127,22 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload || 'Something went wrong';
       });
+    builder
+      .addCase(createReview.pending, (state) => {
+        state.reviewLoading = true;
+        state.error = null;
+      })
+      .addCase(createReview.fulfilled, (state, action) => {
+        state.reviewLoading = false;
+        state.reviewSuccess = true;
+        state.error = null;
+      })
+      .addCase(createReview.rejected, (state, action) => {
+        state.reviewLoading = false;
+        state.error = action.payload || 'Something went wrong';
+      });
   }
 });
 
-export const { removeErrors } = productSlice.actions;
+export const { removeErrors, removeSuccess } = productSlice.actions;
 export default productSlice.reducer;

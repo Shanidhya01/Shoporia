@@ -6,16 +6,22 @@ import Footer from "../components/Footer";
 import Rating from "@mui/material/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProductDetails, removeErrors } from "../features/products/productSlice";
+import {
+  createReview,
+  getProductDetails,
+  removeErrors,
+  removeSuccess,
+} from "../features/products/productSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { addItemToCart, removeMessage } from "../features/cart/cartSlice";
 
 function ProductDetails() {
+  const [comment, setComment] = React.useState("");
   const [userRating, setUserRating] = React.useState(0);
   const [quantity, setQuantity] = React.useState(1);
 
-  const { loading, error, product } = useSelector((state) => state.product);
+  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector((state) => state.product);
   const {
     loading: cartLoading,
     error: cartError,
@@ -61,26 +67,6 @@ function ProductDetails() {
     };
   }, [dispatch, id]);
 
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <Loader />
-        <Footer />
-      </>
-    );
-  }
-
-  if (error || !product) {
-    return (
-      <>
-        <PageTitle title="Error | Product Details" />
-        <Navbar />
-        <Footer />
-      </>
-    );
-  }
-
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -112,6 +98,57 @@ function ProductDetails() {
     });
   };
 
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!userRating) {
+      toast.error("Please provide a rating before submitting your review.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+    dispatch(
+      createReview({
+        rating: userRating,
+        comment,
+        productId: id,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (reviewSuccess) {
+      toast.success("Review submitted successfully", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      setUserRating(0);
+      setComment("");
+      dispatch(removeSuccess());
+      dispatch(getProductDetails(id));
+    }
+  }, [dispatch,id ,reviewSuccess]);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <Loader />
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <>
+        <PageTitle title="Error | Product Details" />
+        <Navbar />
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <PageTitle title={`${product.name} Details`} />
@@ -139,11 +176,7 @@ function ProductDetails() {
             </div>
 
             <div className="stock-status">
-              <span
-                className={
-                  product.stock > 1 ? `in-stock` : `out-of-stock`
-                }
-              >
+              <span className={product.stock > 1 ? `in-stock` : `out-of-stock`}>
                 {product.stock > 0
                   ? `In Stock (${product.stock} items available)`
                   : "Out of Stock"}
@@ -176,7 +209,7 @@ function ProductDetails() {
               {cartLoading ? "Adding..." : "Add to Cart"}
             </button>
 
-            <form className="review-form">
+            <form className="review-form" onSubmit={handleReviewSubmit}>
               <h3>Write a Review</h3>
               <Rating
                 value={userRating}
@@ -185,9 +218,12 @@ function ProductDetails() {
               <textarea
                 placeholder="Write your review here..."
                 className="review-input"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                required
               ></textarea>
-              <button type="submit" className="submit-review-btn">
-                Submit Review
+              <button type="submit" className="submit-review-btn" disabled={reviewLoading}>
+                {reviewLoading ? 'Submitting...' : 'Submit Review'}
               </button>
             </form>
           </div>
