@@ -66,7 +66,7 @@ function ProductsList() {
                   <tr key={product._id}>
                     <td>{index + 1}</td>
                     <td>
-                      <img src={product.images[0].url} alt={product.name} />
+                      <img src={product.images[0].url} alt={product.name} className="admin-product-image" />
                     </td>
                     <td>{product.name}</td>
                     <td>{product.price}</td>

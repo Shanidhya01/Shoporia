@@ -1,9 +1,28 @@
 import Product from "../models/productModel.js";
-import mongoose from "mongoose"; // <-- add this
+import mongoose from "mongoose"; 
+import {v2 as cloudinary} from "cloudinary";
 
 // 1 - Create Product
 export const createProduct = async (req, res) => {
   try {
+    let image = [];
+    if(typeof req.body.images === "string") {
+      image.push(req.body.images);
+    } else {
+      image = req.body.images;
+    }
+    const imageLinks = [];
+    for (let i = 0; i < image.length; i++) {
+      const result = await cloudinary.uploader.upload(image[i], {
+        folder: "products",
+      });
+      imageLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+    req.body.images = imageLinks;
+
     req.body.user = req.user.id; // Add user ID to the request body
     const product = await Product.create(req.body);
     res.status(201).json({

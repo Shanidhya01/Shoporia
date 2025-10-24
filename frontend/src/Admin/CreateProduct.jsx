@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Styles/CreateProduct.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PageTitle from "../components/PageTitle";
+import { useDispatch, useSelector } from "react-redux";
+import { createProduct, removeErrors, removeSuccess } from "../features/admin/adminSlice";
+import { toast } from "react-toastify";
 
 function CreateProduct() {
+  const {success, error, loading} = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -38,8 +43,10 @@ function CreateProduct() {
     myForm.set("category", category);
     myForm.set("stock", stock);
     images.forEach((img) => {
-      myForm.append("image", img);
+      myForm.append("images", img);
     });
+
+    dispatch(createProduct(myForm));
   };
 
   const createProductImage = (e) => {
@@ -57,6 +64,27 @@ function CreateProduct() {
       reader.readAsDataURL(file);
     });
   }
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message,{ position: "top-center", autoClose: 3000});
+      dispatch(removeErrors());
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Product created successfully",{ position: "top-center", autoClose: 3000});
+      dispatch(removeSuccess());
+      setName("");
+      setPrice("");
+      setDescription("");
+      setCategory("");
+      setStock("");
+      setImages([]);
+      setImagePreview([]);
+    }
+  }, [dispatch, success]);
 
   return (
     <>
@@ -135,7 +163,7 @@ function CreateProduct() {
               />
             ))}
           </div>
-          <button className="submit-btn">Create</button>
+          <button className="submit-btn">{loading ? "Creating..." : "Create"}</button>
         </form>
       </div>
       <Footer />
