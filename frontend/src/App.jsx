@@ -15,7 +15,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdatePassword from './User/UpdatePassword';
 import ForgotPassword from './User/ForgotPassword';
-import ResetPassword from './User/ResetPAssword';
+import ResetPassword from './User/ResetPassword';
 import Cart from './Cart/Cart';
 import Shipping from './Cart/Shipping';
 import OrderConfirm from './Cart/OrderConfirm';
