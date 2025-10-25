@@ -14,7 +14,7 @@ function UsersList() {
   const { users, loading, error, message } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(users);
   // Popup state
   const [showPopup, setShowPopup] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -42,12 +42,21 @@ function UsersList() {
     document.body.classList.remove("blur-active");
   };
 
-  const confirmDelete = () => {
-    dispatch(deleteUser(selectedUserId));
+  const confirmDelete = async () => {
     setShowPopup(false);
     document.body.classList.remove("blur-active");
-    toast.success("User deleted successfully!", { position: "top-center", autoClose: 3000 });
-    navigate("/admin/dashboard");
+    try {
+      const resultAction = await dispatch(deleteUser(selectedUserId));
+      if (deleteUser.fulfilled.match(resultAction)) {
+        toast.success("User deleted successfully!", { position: "top-center", autoClose: 3000 });
+        navigate("/admin/dashboard");
+      } else {
+        const errorMsg = resultAction.payload?.message || "Failed to delete user.";
+        toast.error(errorMsg, { position: "top-center", autoClose: 3000 });
+      }
+    } catch (err) {
+      toast.error("Failed to delete user.", { position: "top-center", autoClose: 3000 });
+    }
   };
 
   return (

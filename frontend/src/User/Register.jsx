@@ -51,7 +51,7 @@ function Register() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
       toast.success("Registered successfully", { position: "top-center" });
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",

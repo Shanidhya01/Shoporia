@@ -109,7 +109,7 @@ function ProductsList() {
                       />
                     </td>
                     <td>{product.name}</td>
-                    <td>{product.price}</td>
+                    <td>₹{product.price}</td>
                     <td>{product.ratings}</td>
                     <td>{product.category}</td>
                     <td>{product.stock}</td>

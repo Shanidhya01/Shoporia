@@ -390,10 +390,7 @@ export const deleteUser = async (req, res) => {
     }
     const imageId = user.avatar.public_id;
     await cloudinary.uploader.destroy(imageId);
-    await user.remove();
-
     await User.findByIdAndDelete(req.params.id);
-
     return res.status(200).json({
       success: true,
       message: "User deleted successfully",

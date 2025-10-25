@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Styles/Dashboard.css'
 import {
   AddBox,
@@ -15,11 +15,27 @@ import {
   Star,
 } from '@mui/icons-material';
 import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
 import PageTitle from '../components/PageTitle'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdminProducts, fetchAllOrders } from '../features/admin/adminSlice';
 
 function Dashboard() {
+
+  const {products,orders,totalAmount} = useSelector(state=>state.admin);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAdminProducts());
+    dispatch(fetchAllOrders());
+  }, [dispatch]);
+
+  const totalProducts = products ? products.length : 0;
+  const totalOrders = orders ? orders.length : 0;
+  const outOfStock = products ? products.filter(product => product.stock === 0).length : 0;
+  const inStock = totalProducts - outOfStock;
+  const totalReviews = products ? products.reduce((acc, product) => acc + (product.reviews ? product.reviews.length : 0), 0) : 0;
+
+
   return (
     <>
       <PageTitle title="Admin Dashboard" />
@@ -58,7 +74,7 @@ function Dashboard() {
             </div>
             <div className="nav-section">
               <h3>Reviews</h3>
-              <Link to="/admin/reviewId" className="nav-link">
+              <Link to="/admin/reviews" className="nav-link">
                 <Star className='nav-icon'/>
                 All Reviews
               </Link>
@@ -71,32 +87,32 @@ function Dashboard() {
             <div className="stat-box">
               <Inventory  />
               <h3>Total Products</h3>
-              <p>10</p>
+              <p>{totalProducts}</p>
             </div>
             <div className="stat-box">
               <ShoppingCart  />
               <h3>Total Orders</h3>
-              <p>5</p>
+              <p>{totalOrders}</p>
             </div>
             <div className="stat-box">
               <Star  />
               <h3>Total Reviews</h3>
-              <p>3</p>
+              <p>{totalReviews}</p>
             </div>
             <div className="stat-box">
               <Payments  />
               <h3>Total Revenue</h3>
-              <p>₹1000</p>
+              <p>₹{totalAmount}</p>
             </div>
             <div className="stat-box">
               <Error  />
               <h3>Out of Stock</h3>
-              <p>2</p>
+              <p>{outOfStock}</p>
             </div>
             <div className="stat-box">
               <CheckCircle  />
               <h3>In Stock</h3>
-              <p>8</p>
+              <p>{inStock}</p>
             </div>
           </div>
 
