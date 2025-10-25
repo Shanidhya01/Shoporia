@@ -10,7 +10,6 @@ import {
   removeSuccess,
 } from "../features/user/userSlice";
 import { toast } from "react-toastify";
-import { set } from "mongoose";
 import Loader from "../components/Loader";
 
 function ForgotPassword() {
