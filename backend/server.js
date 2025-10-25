@@ -5,6 +5,11 @@ dotenv.config({path: "backend/.env"});
 import {v2 as cloudinary} from "cloudinary";
 import Razorpay from "razorpay";
 
+
+if(process.env.NODE_ENV !== 'PRODUCTION'){
+  dotenv.config({path: "backend/.env"});
+}
+
 const PORT = process.env.PORT || 3000;
 
 export const instance = new Razorpay({
