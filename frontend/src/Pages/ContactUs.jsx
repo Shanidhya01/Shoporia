@@ -44,17 +44,17 @@ const ContactUs = () => {
   const contactInfo = [
     {
       title: "Visit Us",
-      content: "123 Shopping Street, Retail District, City, 12345",
+      content: "M.G. Road, Bangalore, Karnataka 560001, India",
       icon: "📍"
     },
     {
       title: "Call Us",
-      content: "+1 (234) 567-8900",
+      content: "+91 (080) 4567-8900",
       icon: "📞"
     },
     {
       title: "Email Us",
-      content: "support@shoporia.com",
+      content: "lucky@shoporia.com",
       icon: "📧"
     },
     {
@@ -171,7 +171,7 @@ const ContactUs = () => {
             >
               <div className="map-placeholder">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30596073366!2d-74.25986652425035!3d40.69714940555841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1652852656272!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.977783734946!2d77.60758661482283!3d12.974863890850427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1682e52fd4c7%3A0x3e5cd94b4eee34a4!2sMG%20Road%2C%20Bengaluru%2C%20Karnataka%2C%20India!5e0!3m2!1sen!2sin!4v1635167231456!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
