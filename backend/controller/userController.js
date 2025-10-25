@@ -381,13 +381,19 @@ export const updateUserRole = async (req, res) => {
 //Admin - Delete user
 export const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
     if(!user) {
       return res.status(404).json({
         success: false,
         message: `User not found with this ID : ${req.params.id}`,
       });
     }
+    const imageId = user.avatar.public_id;
+    await cloudinary.uploader.destroy(imageId);
+    await user.remove();
+
+    await User.findByIdAndDelete(req.params.id);
+
     return res.status(200).json({
       success: true,
       message: "User deleted successfully",

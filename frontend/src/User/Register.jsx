@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Styles/Form.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageTitle from "../components/PageTitle";
 
@@ -15,6 +15,7 @@ function Register() {
 
   // FIX: define loading
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setFormData((s) => ({ ...s, [e.target.name]: e.target.value }));
@@ -50,6 +51,7 @@ function Register() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
       toast.success("Registered successfully", { position: "top-center" });
+      navigate("/login");
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",

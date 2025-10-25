@@ -56,6 +56,77 @@ export const deleteProduct = createAsyncThunk("admin/deleteProduct", async (prod
   }
 );
 
+// fetch all user
+export const fetchUsers = createAsyncThunk("admin/fetchUsers", async (_, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.get("/api/v1/admin/users");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to get users. Please try again.");
+    }
+  }
+);
+
+// get single user details
+export const getSingleUser = createAsyncThunk("admin/getSingleUser", async (userId, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.get(`/api/v1/admin/user/${userId}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to get user. Please try again.");
+    }
+  }
+);
+
+// Update user role
+export const updateUserRole = createAsyncThunk("admin/updateUserRole", async ({userId, role}, { rejectWithValue }) => {
+  try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+      const { data } = await axios.put(`/api/v1/admin/user/${userId}`, {role}, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update user. Please try again.");
+    }
+  }
+);
+
+// Delete user
+export const deleteUser = createAsyncThunk("admin/deleteUser", async (userId, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.delete(`/api/v1/admin/user/${userId}`);
+      return { userId };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to delete user. Please try again.");
+    }
+  }
+);
+
+// Fetch All Orders
+export const fetchAllOrders = createAsyncThunk("admin/fetchAllOrders", async (_, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.get("/api/v1/admin/orders");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to get orders. Please try again.");
+    }
+  }
+);
+
+// Delete Order
+export const deleteOrder = createAsyncThunk("admin/deleteOrder", async (id, { rejectWithValue }) => {
+  try {
+      const { data } = await axios.delete(`/api/v1/admin/order/${id}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to delete order. Please try again.");
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -65,6 +136,11 @@ const adminSlice = createSlice({
     loading: false,
     product: {},
     deleting: {},
+    users: [],
+    user: {},
+    message: null,
+    orders: [],
+    totalAmount:0,
   },
   reducers: {
     removeErrors : (state) => {
@@ -72,6 +148,9 @@ const adminSlice = createSlice({
     },
     removeSuccess : (state) => {
       state.success = false;
+    },
+    clearMessage : (state) => {
+      state.message = null;
     },
   },
   extraReducers: (builder) => {
@@ -135,8 +214,94 @@ const adminSlice = createSlice({
         state.deleting[productId] = false;
         state.error = action.payload || "Failed to delete product. Please try again.";
       });
+
+      builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload.users;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to get users. Please try again.";
+      });
+
+      builder
+      .addCase(getSingleUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSingleUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+      })
+      .addCase(getSingleUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to get user. Please try again.";
+      });
+
+      builder
+      .addCase(updateUserRole.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload.success;
+      })
+      .addCase(updateUserRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update user. Please try again.";
+      });
+
+      builder
+      .addCase(deleteUser.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message || "User deleted successfully";
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to delete user. Please try again.";
+      });
+
+      builder
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.loading = true;        
+        state.error = null;
+      })
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload.orders;
+        state.totalAmount = action.payload.totalAmount;
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to get orders. Please try again.";
+      });
+
+      builder
+      .addCase(deleteOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload.success;
+        state.message = action.payload.message || "Order deleted successfully";
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to delete order. Please try again.";
+      });
   },
 });
 
-export const { removeErrors, removeSuccess } = adminSlice.actions;
+export const { removeErrors, removeSuccess, clearMessage } = adminSlice.actions;
 export default adminSlice.reducer;

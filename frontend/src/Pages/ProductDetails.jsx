@@ -20,11 +20,8 @@ function ProductDetails() {
   const [comment, setComment] = React.useState("");
   const [userRating, setUserRating] = React.useState(0);
   const [quantity, setQuantity] = React.useState(1);
-  const [selectedImage, setSelectedImage] = React.useState("");
 
-  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector(
-    (state) => state.product
-  );
+  const { loading, error, product, reviewSuccess, reviewLoading } = useSelector((state) => state.product);
   const {
     loading: cartLoading,
     error: cartError,
@@ -130,13 +127,7 @@ function ProductDetails() {
       dispatch(removeSuccess());
       dispatch(getProductDetails(id));
     }
-  }, [dispatch, id, reviewSuccess]);
-
-  useEffect(() => {
-    if (product && product.images && product.images.length > 0) {
-      setSelectedImage(product.images[0].url);
-    }
-  }, [product]);
+  }, [dispatch,id ,reviewSuccess]);
 
   if (loading) {
     return (
@@ -166,23 +157,10 @@ function ProductDetails() {
         <div className="product-detail-container">
           <div className="product-image-container">
             <img
-              src={selectedImage}
+              src={product.images[0].url}
               alt="Product"
-              className="product-detail-image"
+              className="product-image"
             />
-            {product.images.length > 1 && (
-              <div className="product-thumbnails">
-                {product.images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image.url}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="thumbnail-image"
-                    onClick={() => setSelectedImage(image.url)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
 
           <div className="product-info">
@@ -190,7 +168,7 @@ function ProductDetails() {
             <p className="product-description">{product.description}</p>
             <p className="product-price">Price: ₹ {product.price}</p>
             <div className="product-rating">
-              <Rating value={product.rating} disabled />
+              <Rating value={product.ratings} disabled />
               <span className="productCardSpan">
                 ({product.numOfReviews}
                 {product.numOfReviews === 1 ? " Review" : " Reviews"})
@@ -244,12 +222,8 @@ function ProductDetails() {
                 onChange={(e) => setComment(e.target.value)}
                 required
               ></textarea>
-              <button
-                type="submit"
-                className="submit-review-btn"
-                disabled={reviewLoading}
-              >
-                {reviewLoading ? "Submitting..." : "Submit Review"}
+              <button type="submit" className="submit-review-btn" disabled={reviewLoading}>
+                {reviewLoading ? 'Submitting...' : 'Submit Review'}
               </button>
             </form>
           </div>

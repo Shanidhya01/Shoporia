@@ -27,6 +27,9 @@ import Dashboard from './Admin/Dashboard';
 import ProductsList from './Admin/ProductsList';
 import CreateProduct from './Admin/CreateProduct';
 import UpdateProduct from './Admin/UpdateProduct';
+import UsersList from './Admin/UsersList';
+import UpdateRole from './Admin/UpdateRole';
+import OrdersList from './Admin/OrdersList';
 
 function App() {
   const {isAuthenticated,user} = useSelector(state=>state.user);
@@ -66,6 +69,9 @@ function App() {
           <Route path='/admin/products' element={<ProtectedRoutes element={<ProductsList />} adminOnly={true} />} />
           <Route path='/admin/product/create' element={<ProtectedRoutes element={<CreateProduct />} adminOnly={true} />} />
           <Route path='/admin/product/:updateId' element={<ProtectedRoutes element={<UpdateProduct />} adminOnly={true} />} />
+          <Route path='/admin/users' element={<ProtectedRoutes element={<UsersList />} adminOnly={true} />} />
+          <Route path='/admin/user/:userId' element={<ProtectedRoutes element={<UpdateRole />} adminOnly={true} />} />
+          <Route path='/admin/orders' element={<ProtectedRoutes element={<OrdersList />} adminOnly={true} />} />
         </Routes>
         {isAuthenticated && <UserDashboard user={user} />}
         <ToastContainer 

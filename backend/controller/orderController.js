@@ -148,19 +148,21 @@ async function updateQuantity(id, quantity) {
 // 6 - Delete Order -- Admin
 export const deleteOrder = async (req, res) => {
   try {
-    const order = await Order.findByIdAndDelete(req.params.id);
+    const order = await Order.findById(req.params.id);
     if(!order) {
       return res.status(404).json({
         success: false,
         message: "Order not found with this ID",
       });
     }
+    // Only allow deletion if order is delivered
     if(order.orderStatus !== "Delivered") {
       return res.status(400).json({
         success: false,
         message: "This Order is not delivered yet, cannot delete",
       });
     }
+    // Now delete the order
     await Order.deleteOne({ _id: req.params.id });
     res.status(200).json({
       success: true,
