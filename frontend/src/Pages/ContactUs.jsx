@@ -49,7 +49,7 @@ const ContactUs = () => {
     },
     {
       title: "Call Us",
-      content: "+91 (080) 4567-8900",
+      content: "+91 8045678900",
       icon: "📞"
     },
     {

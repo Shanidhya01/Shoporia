@@ -43,13 +43,10 @@ const AboutUs = () => {
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            {/* <h2>Our Story</h2>
+            {/* <h2>Our Story</h2> */}
             <p>
-              Founded in 2025, Shoporia began as a small startup with a big dream —
-              to redefine online shopping through trust, quality, and innovation. 
-              Today, we connect thousands of customers to products they love, 
-              offering a seamless and enjoyable shopping experience across devices.
-            </p> */}
+              Shoporia is your one-stop online shop for all your needs. We offer a wide range of products from electronics to fashion, ensuring quality and affordability.
+            </p>
           </motion.section>
 
           {/* --- Mission Section --- */}
