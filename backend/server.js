@@ -1,13 +1,16 @@
-import app from "./app.js";
 import dotenv from "dotenv";
+// Load env ASAP so all subsequent imports see process.env
+dotenv.config({ path: "backend/.env" });
+
+import app from "./app.js";
 import connectDB from "./config/db.js";
-dotenv.config({path: "backend/.env"});
 import {v2 as cloudinary} from "cloudinary";
 import Razorpay from "razorpay";
 
 
-if(process.env.NODE_ENV !== 'PRODUCTION'){
-  dotenv.config({path: "backend/.env"});
+// Fallback load in non-production environments (harmless if already loaded)
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  dotenv.config({ path: "backend/.env" });
 }
 
 const PORT = process.env.PORT || 3000;
