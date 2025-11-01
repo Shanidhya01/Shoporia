@@ -1,6 +1,11 @@
-# Shoporia
+# ABC General Store
 
-Shoporia is a full-stack e-commerce web application built with React (frontend) and Express/MongoDB (backend). It features user authentication, product management, cart, orders, payments, and an admin dashboard.
+
+ABC General Store (Shoporia concept)
+
+This project was built as a concept for "ABC General Store". All branding, UI, and features are tailored to match the client brief. Shoporia is the original codebase, adapted for ABC General Store branding.
+
+ABC General Store is a full-stack e-commerce web application built with React (frontend) and Express/MongoDB (backend). It features user authentication, product management, cart, orders, payments, and an admin dashboard.
 
 ## Table of Contents
 - [Features](#features)
@@ -85,7 +90,6 @@ cd Shoporia
 ### 2. Install dependencies
 #### Backend
 ```sh
-cd backend
 npm install
 ```
 #### Frontend
@@ -109,8 +113,7 @@ EMAIL_PASS=your_email_password
 
 ### 4. Start the backend server
 ```sh
-cd ../backend
-npm run start
+npm run dev
 ```
 
 ### 5. Start the frontend development server
